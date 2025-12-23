@@ -1,424 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>LinezForge</title>
     <meta name="description" content="LinezForge creates thoughtful, privacy-focused apps.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "terminal-bg": "#1A1A1A",
+                        "terminal-border": "#333333",
+                        "terminal-text": "#FFFFFF",
+                        "terminal-muted": "#AAAAAA",
+                        "neon": "#00FF00",
+                        "neon-dim": "rgba(0, 255, 0, 0.1)",
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        "none": "0",
+                        "sm": "0",
+                        "md": "0",
+                        "lg": "0",
+                        "xl": "0",
+                        "2xl": "0",
+                        "DEFAULT": "0",
+                        "full": "0"
+                    },
+                },
+            },
+        }
+    </script>
     <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar */
+        ::-webkit-scrollbar {
+            display: none;
+        }
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-
-        :root {
-            --color-bg: #F6F4EF;
-            --color-surface: #FFFFFF;
-            --color-surface-alt: #F1EEE7;
-            --color-border: #DEDAD2;
-            --color-text: #141414;
-            --color-text-soft: #5B5B5B;
-            --color-accent: #7A1E2D;
-            --color-accent-hover: #651927;
-            --color-accent-soft: #F3D7DC;
-            --color-link: #9B2B3E;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--color-bg);
-            color: var(--color-text);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 80px 24px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 72px;
-        }
-
-        .logo {
-            font-size: 2.25rem;
-            font-weight: 600;
-            letter-spacing: -0.03em;
-            margin-bottom: 16px;
-        }
-
-        .logo-accent {
-            color: var(--color-accent);
-        }
-
-        .tagline {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
-            color: var(--color-text);
-        }
-
-        .tagline-fn {
-            color: var(--color-accent);
-        }
-
-        .tagline-comment {
-            color: var(--color-text-soft);
-            font-style: italic;
-        }
-
-        /* Apps Section */
-        .section-title {
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--color-text-soft);
-            margin-bottom: 20px;
-        }
-
-        .app-grid {
-            display: grid;
-            gap: 20px;
-        }
-
-        .app-card {
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 16px;
-            padding: 28px;
-            transition: all 0.2s ease;
-        }
-
-        .app-card:hover {
-            border-color: var(--color-accent);
-            box-shadow: 0 4px 24px rgba(122, 30, 45, 0.08);
-        }
-
-        .app-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .app-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            flex-shrink: 0;
-            overflow: hidden;
-            background: var(--color-surface-alt);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .app-icon img {
-            width: 100%;
+        html, body {
             height: 100%;
-            object-fit: cover;
-        }
-
-        .app-icon-placeholder {
-            font-size: 1.75rem;
-        }
-
-        .app-title-group {
-            flex: 1;
-        }
-
-        .app-name {
-            font-size: 1.35rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .app-tagline {
-            color: var(--color-text-soft);
-            font-size: 0.9rem;
-        }
-
-        .app-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            border: 1px solid var(--color-border);
-            background: var(--color-surface-alt);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-text-soft);
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .action-btn:hover {
-            border-color: var(--color-accent);
-            color: var(--color-accent);
-            background: var(--color-accent-soft);
-        }
-
-        .action-btn svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .app-description {
-            color: var(--color-text);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-
-        .app-features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .feature {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.85rem;
-            color: var(--color-text-soft);
-        }
-
-        .feature-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: var(--color-accent-soft);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .feature-icon svg {
-            width: 16px;
-            height: 16px;
-            color: var(--color-accent);
-        }
-
-        .app-badges {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            padding: 6px 12px;
-            border-radius: 100px;
-            background: var(--color-surface-alt);
-            color: var(--color-text-soft);
-            border: 1px solid var(--color-border);
-        }
-
-        /* Coming Soon Card */
-        .app-card.coming-soon {
-            opacity: 0.5;
-        }
-
-        .app-card.coming-soon .app-icon {
-            background: var(--color-border);
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: 80px;
-            text-align: center;
-        }
-
-        .contact-link {
-            color: var(--color-link);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .contact-link:hover {
-            text-decoration: underline;
-        }
-
-        .logo-img {
-            height: 80px;
-            width: auto;
-            margin-bottom: 16px;
-        }
-
-        /* Responsive */
-        @media (max-width: 540px) {
-            .container {
-                padding: 48px 16px;
-            }
-
-            .logo {
-                font-size: 1.75rem;
-            }
-
-            .tagline {
-                font-size: 0.85rem;
-            }
-
-            .app-card {
-                padding: 20px;
-            }
-
-            .app-header {
-                flex-wrap: wrap;
-            }
-
-            .app-actions {
-                width: 100%;
-                margin-top: 12px;
-            }
-
-            .app-features {
-                grid-template-columns: 1fr;
-            }
+            overflow: hidden;
         }
     </style>
 </head>
-
-<body>
-    <div class="container">
-        <header class="header">
-            <img src="assets/linezforge-logo.png" alt="LinezForge" class="logo-img">
-            <p class="tagline"><span class="tagline-fn">Precision()</span> <span class="tagline-comment">// In
-                    Motion</span></p>
-        </header>
-
-        <main>
-            <p class="section-title">Apps</p>
-            <div class="app-grid">
-                <!-- FirstVerse -->
-                <article class="app-card">
-                    <div class="app-header">
-                        <div class="app-icon">
-                            <img src="assets/firstverse-icon.png" alt="FirstVerse">
-                        </div>
-                        <div class="app-title-group">
-                            <h2 class="app-name">FirstVerse</h2>
-                            <p class="app-tagline">Daily Bible companion</p>
-                        </div>
-                        <div class="app-actions">
-                            <a href="https://play.google.com/store/apps/details?id=com.linezforge.firstverse"
-                                class="action-btn" title="Get on Google Play" aria-label="Get on Google Play">
-                                <svg viewBox="0 0 24 24" fill="currentColor">
-                                    <path
-                                        d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z" />
-                                </svg>
-                            </a>
-                            <a href="https://linezforge.github.io/linezforge-legal/firstverse/" class="action-btn"
-                                title="Privacy & Terms" aria-label="Privacy & Terms">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <p class="app-description">
-                        A simple daily Bible companion, built to help you stay close to Scripture in the middle of a
-                        noisy world.
-                        It gives you a quiet, focused space to sit with one verse at a time and let it sink in.
-                    </p>
-                    <div class="app-features">
-                        <div class="feature">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                </svg>
-                            </div>
-                            <span>Privacy first</span>
-                        </div>
-                        <div class="feature">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="1" y1="1" x2="23" y2="23" />
-                                    <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
-                                    <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
-                                    <path d="M10.71 5.05A16 16 0 0 1 22.58 9" />
-                                    <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88" />
-                                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
-                                    <line x1="12" y1="20" x2="12.01" y2="20" />
-                                </svg>
-                            </div>
-                            <span>Fully offline</span>
-                        </div>
-                        <div class="feature">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="8" x2="12" y2="12" />
-                                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                                </svg>
-                            </div>
-                            <span>Free forever</span>
-                        </div>
-                        <div class="feature">
-                            <div class="feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon
-                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                </svg>
-                            </div>
-                            <span>Simple &amp; focused</span>
-                        </div>
-                    </div>
-                    <div class="app-badges">
-                        <span class="badge">Android</span>
-                        <span class="badge">WEBPB &amp; Webster</span>
-                        <span class="badge">Semantic search</span>
-                    </div>
-                </article>
-
-                <!-- Future App Placeholder -->
-                <article class="app-card coming-soon">
-                    <div class="app-header">
-                        <div class="app-icon">
-                            <span class="app-icon-placeholder">✦</span>
-                        </div>
-                        <div class="app-title-group">
-                            <h2 class="app-name">More to come</h2>
-                            <p class="app-tagline">Future projects</p>
-                        </div>
-                    </div>
-                    <p class="app-description">
-                        More thoughtful apps are in the works. Stay tuned.
-                    </p>
-                </article>
+<body class="bg-terminal-bg font-mono text-terminal-text antialiased h-screen flex flex-col">
+    
+    <!-- Sticky Header -->
+    <header class="flex-shrink-0 p-4 sm:p-6 border-b border-terminal-border flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-4 bg-terminal-bg z-10">
+        <div class="flex items-center justify-center">
+            <img src="assets/linezforge-logo.png" alt="LinezForge" class="h-[56px] w-auto">
+            <div class="h-[56px] w-[56px] flex items-center justify-center bg-neon text-terminal-bg">
+                <span class="material-symbols-outlined text-[32px]">code_blocks</span>
             </div>
-        </main>
+        </div>
+        <p class="font-mono text-sm tracking-tight font-bold text-center sm:text-left">
+            <span class="text-neon">Precision()</span>
+            <span class="text-terminal-muted"> // In Motion</span>
+        </p>
+    </header>
 
-        <footer class="footer">
-            <a href="mailto:support@linezforge.com" class="contact-link">support@linezforge.com</a>
-        </footer>
-    </div>
+    <!-- Scrollable Content Area -->
+    <main class="flex-1 overflow-y-auto">
+        
+        <!-- FirstVerse App -->
+        <article class="@container w-full border-b border-terminal-border">
+            <div class="p-4 sm:p-6">
+                <div class="flex flex-col @[580px]:flex-row gap-5 items-start @[580px]:items-center justify-between mb-5">
+                    <div class="flex items-center gap-4">
+                        <img src="assets/firstverse-icon.png" alt="FirstVerse" class="w-[56px] h-[56px]">
+                        <div class="w-[56px] h-[56px] shrink-0 bg-neon flex items-center justify-center text-terminal-bg">
+                            <span class="material-symbols-outlined text-3xl">menu_book</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold leading-tight text-terminal-text">FIRSTVERSE</h3>
+                            <p class="text-sm text-terminal-muted font-bold mt-0.5">DAILY BIBLE COMPANION</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 self-start @[580px]:self-auto mt-2 @[580px]:mt-0">
+                        <a class="flex items-center gap-1.5 h-9 px-3 text-neon hover:bg-neon hover:text-terminal-bg text-xs font-bold transition-colors border border-neon" href="https://linezforge.github.io/linezforge-legal/firstverse/">
+                            <span class="material-symbols-outlined text-[16px]">shield</span>
+                            LEGAL
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.linezforge.firstverse" class="flex items-center justify-center gap-1.5 h-9 px-5 bg-neon hover:bg-opacity-80 text-terminal-bg text-sm font-bold transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                            GET IT
+                        </a>
+                    </div>
+                </div>
+                <p class="text-terminal-text text-base leading-relaxed mb-6 font-medium">
+                    A simple daily Bible companion, built to help you stay close to Scripture in the middle of a noisy world. A quiet, focused space to sit with one verse at a time and let it sink in.
+                </p>
+                <div class="grid grid-cols-1 @[480px]:grid-cols-2 gap-2 mb-6">
+                    <div class="flex items-center gap-2 text-terminal-text">
+                        <span class="material-symbols-outlined text-neon text-[18px]">check_circle</span>
+                        <span class="text-xs font-bold">PRIVACY FIRST</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-terminal-text">
+                        <span class="material-symbols-outlined text-neon text-[18px]">check_circle</span>
+                        <span class="text-xs font-bold">FULLY OFFLINE</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-terminal-text">
+                        <span class="material-symbols-outlined text-neon text-[18px]">check_circle</span>
+                        <span class="text-xs font-bold">FREE FOREVER</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-terminal-text">
+                        <span class="material-symbols-outlined text-neon text-[18px]">check_circle</span>
+                        <span class="text-xs font-bold">SEMANTIC SEARCH</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-5 border-t border-terminal-border">
+                    <span class="px-3 py-1 bg-neon-dim text-neon text-xs font-bold border border-neon">ANDROID</span>
+                    <span class="px-3 py-1 bg-neon-dim text-neon text-xs font-bold border border-neon">WEBPB & WEBSTER</span>
+                    <span class="px-3 py-1 bg-neon-dim text-neon text-xs font-bold border border-neon">BIBLE</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Coming Soon -->
+        <article class="@container w-full border-b border-terminal-border opacity-50">
+            <div class="p-4 sm:p-6">
+                <div class="flex flex-col @[580px]:flex-row gap-5 items-start @[580px]:items-center justify-between mb-5">
+                    <div class="flex items-center gap-4">
+                        <div class="w-[56px] h-[56px] shrink-0 bg-terminal-border flex items-center justify-center text-terminal-muted">
+                            <span class="material-symbols-outlined text-3xl">star</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold leading-tight text-terminal-text">MORE TO COME</h3>
+                            <p class="text-sm text-terminal-muted font-bold mt-0.5">FUTURE PROJECTS</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-terminal-text text-base leading-relaxed font-medium">
+                    More thoughtful apps are in the works. Stay tuned.
+                </p>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="flex-shrink-0 p-4 sm:p-6 border-t border-terminal-border bg-terminal-bg">
+        <div class="flex flex-col items-center justify-center gap-2">
+            <a class="group flex items-center gap-2 text-sm text-terminal-muted hover:text-neon transition-colors font-bold" href="mailto:support@linezforge.com">
+                <span class="material-symbols-outlined text-[18px]">mail</span>
+                <span class="group-hover:underline">SUPPORT@LINEZFORGE.COM</span>
+            </a>
+            <p class="text-xs text-terminal-muted mt-2 font-bold">© 2025 LINEZ FORGE</p>
+        </div>
+    </footer>
+
 </body>
-
 </html>
