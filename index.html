@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinezForge — Apps Crafted with Care</title>
-    <meta name="description" content="LinezForge creates thoughtful, privacy-focused apps. Explore our collection.">
+    <title>LinezForge</title>
+    <meta name="description" content="LinezForge creates thoughtful, privacy-focused apps.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -16,14 +16,16 @@
         }
 
         :root {
-            --color-bg: #0f0f0f;
-            --color-surface: #1a1a1a;
-            --color-surface-hover: #242424;
-            --color-border: #2a2a2a;
-            --color-text: #e5e5e5;
-            --color-text-soft: #888;
-            --color-accent: #9B825A;
-            --color-accent-soft: rgba(155, 130, 90, 0.15);
+            --color-bg: #F6F4EF;
+            --color-surface: #FFFFFF;
+            --color-surface-alt: #F1EEE7;
+            --color-border: #DEDAD2;
+            --color-text: #141414;
+            --color-text-soft: #5B5B5B;
+            --color-accent: #7A1E2D;
+            --color-accent-hover: #651927;
+            --color-accent-soft: #F3D7DC;
+            --color-link: #9B2B3E;
         }
 
         body {
@@ -35,22 +37,22 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 720px;
             margin: 0 auto;
-            padding: 60px 24px;
+            padding: 80px 24px;
         }
 
         /* Header */
         .header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 72px;
         }
 
         .logo {
-            font-size: 2rem;
+            font-size: 2.25rem;
             font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
         }
 
         .logo-accent {
@@ -58,15 +60,25 @@
         }
 
         .tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--color-text);
+        }
+
+        .tagline-fn {
+            color: var(--color-accent);
+        }
+
+        .tagline-comment {
             color: var(--color-text-soft);
-            font-size: 1.1rem;
+            font-style: italic;
         }
 
         /* Apps Section */
         .section-title {
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--color-text-soft);
             margin-bottom: 20px;
@@ -74,48 +86,59 @@
 
         .app-grid {
             display: grid;
-            gap: 16px;
+            gap: 20px;
         }
 
         .app-card {
             background: var(--color-surface);
             border: 1px solid var(--color-border);
-            border-radius: 12px;
-            padding: 24px;
-            text-decoration: none;
-            color: inherit;
+            border-radius: 16px;
+            padding: 28px;
             transition: all 0.2s ease;
-            display: block;
         }
 
         .app-card:hover {
-            background: var(--color-surface-hover);
             border-color: var(--color-accent);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 24px rgba(122, 30, 45, 0.08);
         }
 
         .app-header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
         }
 
         .app-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--color-accent-soft);
-            border-radius: 10px;
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: var(--color-surface-alt);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
+        }
+
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .app-icon-placeholder {
+            font-size: 1.75rem;
+        }
+
+        .app-title-group {
+            flex: 1;
         }
 
         .app-name {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 600;
+            margin-bottom: 4px;
         }
 
         .app-tagline {
@@ -123,10 +146,73 @@
             font-size: 0.9rem;
         }
 
-        .app-description {
+        .app-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            background: var(--color-surface-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: var(--color-text-soft);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: var(--color-accent-soft);
+        }
+
+        .action-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .app-description {
+            color: var(--color-text);
             font-size: 0.95rem;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .app-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--color-text-soft);
+        }
+
+        .feature-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--color-accent-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-icon svg {
+            width: 16px;
+            height: 16px;
+            color: var(--color-accent);
         }
 
         .app-badges {
@@ -136,17 +222,19 @@
         }
 
         .badge {
-            font-size: 0.75rem;
-            padding: 4px 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            padding: 6px 12px;
             border-radius: 100px;
-            background: var(--color-accent-soft);
-            color: var(--color-accent);
+            background: var(--color-surface-alt);
+            color: var(--color-text-soft);
+            border: 1px solid var(--color-border);
         }
 
         /* Coming Soon Card */
         .app-card.coming-soon {
             opacity: 0.5;
-            pointer-events: none;
         }
 
         .app-card.coming-soon .app-icon {
@@ -156,46 +244,48 @@
         /* Footer */
         .footer {
             margin-top: 80px;
-            padding-top: 24px;
-            border-top: 1px solid var(--color-border);
             text-align: center;
         }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 16px;
-        }
-
-        .footer-links a {
-            color: var(--color-text-soft);
+        .contact-link {
+            color: var(--color-link);
             text-decoration: none;
             font-size: 0.9rem;
-            transition: color 0.2s ease;
         }
 
-        .footer-links a:hover {
-            color: var(--color-accent);
-        }
-
-        .copyright {
-            color: var(--color-text-soft);
-            font-size: 0.8rem;
+        .contact-link:hover {
+            text-decoration: underline;
         }
 
         /* Responsive */
-        @media (max-width: 480px) {
+        @media (max-width: 540px) {
             .container {
-                padding: 40px 16px;
+                padding: 48px 16px;
             }
 
             .logo {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
+            }
+
+            .tagline {
+                font-size: 0.85rem;
             }
 
             .app-card {
                 padding: 20px;
+            }
+
+            .app-header {
+                flex-wrap: wrap;
+            }
+
+            .app-actions {
+                width: 100%;
+                margin-top: 12px;
+            }
+
+            .app-features {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -204,37 +294,95 @@
     <div class="container">
         <header class="header">
             <h1 class="logo">Linez<span class="logo-accent">Forge</span></h1>
-            <p class="tagline">Apps crafted with care</p>
+            <p class="tagline"><span class="tagline-fn">Precision()</span> <span class="tagline-comment">// In Motion</span></p>
         </header>
 
         <main>
             <p class="section-title">Apps</p>
             <div class="app-grid">
                 <!-- FirstVerse -->
-                <a href="https://play.google.com/store/apps/details?id=com.linezforge.firstverse" class="app-card">
+                <article class="app-card">
                     <div class="app-header">
-                        <div class="app-icon">📖</div>
-                        <div>
+                        <div class="app-icon">
+                            <img src="assets/firstverse-icon.png" alt="FirstVerse">
+                        </div>
+                        <div class="app-title-group">
                             <h2 class="app-name">FirstVerse</h2>
                             <p class="app-tagline">Daily Bible companion</p>
                         </div>
+                        <div class="app-actions">
+                            <a href="https://play.google.com/store/apps/details?id=com.linezforge.firstverse" class="action-btn" title="Get on Google Play" aria-label="Get on Google Play">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+                                </svg>
+                            </a>
+                            <a href="https://linezforge.github.io/linezforge-legal/firstverse/" class="action-btn" title="Privacy & Terms" aria-label="Privacy & Terms">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                     <p class="app-description">
-                        A distraction-free Bible study app with curated daily verses, semantic search, and offline access. 
-                        Your data stays on your device — no accounts, no tracking.
+                        A simple daily Bible companion, built to help you stay close to Scripture in the middle of a noisy world. 
+                        It gives you a quiet, focused space to sit with one verse at a time and let it sink in.
                     </p>
+                    <div class="app-features">
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <span>Privacy first</span>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="1" y1="1" x2="23" y2="23"/>
+                                    <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+                                    <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+                                    <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+                                    <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+                                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                                    <line x1="12" y1="20" x2="12.01" y2="20"/>
+                                </svg>
+                            </div>
+                            <span>Fully offline</span>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="12"/>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                </svg>
+                            </div>
+                            <span>Free forever</span>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            </div>
+                            <span>Simple &amp; focused</span>
+                        </div>
+                    </div>
                     <div class="app-badges">
                         <span class="badge">Android</span>
-                        <span class="badge">Privacy-first</span>
-                        <span class="badge">Offline</span>
+                        <span class="badge">WEBPB &amp; Webster</span>
+                        <span class="badge">Semantic search</span>
                     </div>
-                </a>
+                </article>
 
                 <!-- Future App Placeholder -->
-                <div class="app-card coming-soon">
+                <article class="app-card coming-soon">
                     <div class="app-header">
-                        <div class="app-icon">✦</div>
-                        <div>
+                        <div class="app-icon">
+                            <span class="app-icon-placeholder">✦</span>
+                        </div>
+                        <div class="app-title-group">
                             <h2 class="app-name">More to come</h2>
                             <p class="app-tagline">Future projects</p>
                         </div>
@@ -242,17 +390,12 @@
                     <p class="app-description">
                         More thoughtful apps are in the works. Stay tuned.
                     </p>
-                </div>
+                </article>
             </div>
         </main>
 
         <footer class="footer">
-            <div class="footer-links">
-                <a href="https://linezforge.github.io/linezforge-legal/">Legal</a>
-                <a href="mailto:support@linezforge.com">Contact</a>
-                <a href="https://github.com/LinezForge">GitHub</a>
-            </div>
-            <p class="copyright">© 2025 Linez Forge</p>
+            <a href="mailto:support@linezforge.com" class="contact-link">support@linezforge.com</a>
         </footer>
     </div>
 </body>
