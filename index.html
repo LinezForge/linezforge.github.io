@@ -3,86 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FirstVerse – Legal</title>
+    <title>LinezForge — Apps Crafted with Care</title>
+    <meta name="description" content="LinezForge creates thoughtful, privacy-focused apps. Explore our collection.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #0f0f0f;
+            --color-surface: #1a1a1a;
+            --color-surface-hover: #242424;
+            --color-border: #2a2a2a;
+            --color-text: #e5e5e5;
+            --color-text-soft: #888;
+            --color-accent: #9B825A;
+            --color-accent-soft: rgba(155, 130, 90, 0.15);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
             line-height: 1.6;
+        }
+
+        .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            color: #333;
+            padding: 60px 24px;
         }
-        h1 {
-            color: #9B825A;
-            border-bottom: 2px solid #9B825A;
-            padding-bottom: 10px;
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
         }
-        h2 {
-            color: #9B825A;
-            margin-top: 30px;
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
         }
-        .meta {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 30px;
+
+        .logo-accent {
+            color: var(--color-accent);
         }
-        .summary {
-            background: #f5f5f5;
-            padding: 15px;
-            border-left: 4px solid #9B825A;
-            margin: 30px 0;
+
+        .tagline {
+            color: var(--color-text-soft);
+            font-size: 1.1rem;
         }
-        strong {
-            color: #000;
+
+        /* Apps Section */
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-soft);
+            margin-bottom: 20px;
         }
-        a {
-            color: #9B825A;
+
+        .app-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .app-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 24px;
             text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            display: block;
         }
-        a:hover {
-            text-decoration: underline;
+
+        .app-card:hover {
+            background: var(--color-surface-hover);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .app-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-accent-soft);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .app-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .app-tagline {
+            color: var(--color-text-soft);
+            font-size: 0.9rem;
+        }
+
+        .app-description {
+            color: var(--color-text-soft);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .app-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: var(--color-accent-soft);
+            color: var(--color-accent);
+        }
+
+        /* Coming Soon Card */
+        .app-card.coming-soon {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .app-card.coming-soon .app-icon {
+            background: var(--color-border);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 80px;
+            padding-top: 24px;
+            border-top: 1px solid var(--color-border);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: var(--color-text-soft);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .copyright {
+            color: var(--color-text-soft);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 40px 16px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .app-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>FirstVerse – Legal</h1>
-    <p class="meta">Privacy Policy &amp; Terms of Use</p>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">Linez<span class="logo-accent">Forge</span></h1>
+            <p class="tagline">Apps crafted with care</p>
+        </header>
 
-    <div class="summary">
-        <p>
-            FirstVerse is designed to be simple, private, and distraction-free.
-            These documents explain how your data is handled (or, in most cases,
-            not handled at all) and the terms under which you use the app.
-        </p>
+        <main>
+            <p class="section-title">Apps</p>
+            <div class="app-grid">
+                <!-- FirstVerse -->
+                <a href="https://play.google.com/store/apps/details?id=com.linezforge.firstverse" class="app-card">
+                    <div class="app-header">
+                        <div class="app-icon">📖</div>
+                        <div>
+                            <h2 class="app-name">FirstVerse</h2>
+                            <p class="app-tagline">Daily Bible companion</p>
+                        </div>
+                    </div>
+                    <p class="app-description">
+                        A distraction-free Bible study app with curated daily verses, semantic search, and offline access. 
+                        Your data stays on your device — no accounts, no tracking.
+                    </p>
+                    <div class="app-badges">
+                        <span class="badge">Android</span>
+                        <span class="badge">Privacy-first</span>
+                        <span class="badge">Offline</span>
+                    </div>
+                </a>
+
+                <!-- Future App Placeholder -->
+                <div class="app-card coming-soon">
+                    <div class="app-header">
+                        <div class="app-icon">✦</div>
+                        <div>
+                            <h2 class="app-name">More to come</h2>
+                            <p class="app-tagline">Future projects</p>
+                        </div>
+                    </div>
+                    <p class="app-description">
+                        More thoughtful apps are in the works. Stay tuned.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="https://linezforge.github.io/linezforge-legal/">Legal</a>
+                <a href="mailto:support@linezforge.com">Contact</a>
+                <a href="https://github.com/LinezForge">GitHub</a>
+            </div>
+            <p class="copyright">© 2025 Linez Forge</p>
+        </footer>
     </div>
-
-    <h2>Privacy Policy</h2>
-    <p>
-        Learn how FirstVerse stores your data locally on your device, runs
-        semantic search models on-device, and avoids analytics, tracking, or
-        remote servers. We do not collect or process personal information.
-    </p>
-    <p>
-        <a href="privacy.html"><strong>Read the full Privacy Policy &rarr;</strong></a>
-    </p>
-
-    <h2>Terms of Use</h2>
-    <p>
-        Review the terms governing your use of FirstVerse, including the licence
-        to use the app, acceptable use, included Bible translations, and limits
-        of liability for this offline, on-device experience.
-    </p>
-
-    <p>
-        <a href="terms.html"><strong>Read the full Terms of Use &rarr;</strong></a>
-    </p>
-
-    <h2>Open Source</h2>
-    <p>
-        FirstVerse uses open source software components that run entirely on your
-        device. All third-party libraries and their licenses are documented within
-        the app under Settings → About → Open Source.
-    </p>
 </body>
 </html>
