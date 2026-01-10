@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
-  <script id="tailwind-config">
+  <script>
     tailwind.config = {
       darkMode: "class",
       theme: {
@@ -28,15 +28,14 @@
           },
         },
       },
-    }
+    };
   </script>
 
   <style>
     .material-symbols-outlined{
       font-variation-settings:'FILL' 0,'wght' 500,'GRAD' 0,'opsz' 24;
     }
-    body{font-family:'Space Grotesk',sans-serif;}
-    body{min-height:max(884px,100dvh);}
+    body{font-family:'Space Grotesk',sans-serif; min-height:max(884px,100dvh);}
   </style>
 </head>
 
@@ -44,7 +43,7 @@
   <div class="relative flex h-full min-h-screen w-full flex-col bg-background-light dark:bg-background-dark max-w-[430px] mx-auto shadow-2xl overflow-x-hidden">
 
     <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-white/5">
-      <a href="/" class="text-primary flex size-12 shrink-0 items-center justify-start cursor-pointer" title="Back">
+      <a href="/angels-share/" class="text-primary flex size-12 shrink-0 items-center justify-start cursor-pointer" title="Back">
         <span class="material-symbols-outlined">arrow_back_ios</span>
       </a>
 
@@ -65,7 +64,7 @@
 
     <div class="px-4 pt-6">
       <h3 class="text-white text-2xl font-bold tracking-tight">Session Controls</h3>
-      <p class="text-[#c9ad92] text-sm mt-1">Start, lock, reveal. Try not to lock your own house by accident.</p>
+      <p class="text-[#c9ad92] text-sm mt-1">Start, lock, reveal. The Angel’s Share Rule™ does not apply to buttons.</p>
     </div>
 
     <!-- PIN card -->
@@ -124,6 +123,9 @@
             <li>Right before pours: Lock.</li>
             <li>After tasting + votes: Reveal.</li>
           </ol>
+          <p class="mt-3 text-[#c9ad92] text-xs">
+            If you see a 409, it usually means “wrong phase” (e.g. already locked).
+          </p>
         </div>
       </div>
     </section>
@@ -159,6 +161,7 @@
   const adminErr = $("adminErr");
 
   let adminPin = sessionStorage.getItem(PIN_KEY) || "";
+  let lastKnownPhase = null;
 
   function setStatus(ok, msg) {
     statusText.textContent = msg;
@@ -179,8 +182,16 @@
       },
       ...opts,
     });
-    if (!res.ok) throw new Error(await res.text());
-    return res.json();
+
+    const bodyText = await res.text();
+    if (!res.ok) {
+      // keep server text, but make 409 readable
+      if (res.status === 409) throw new Error(`409 (Wrong phase): ${bodyText}`);
+      throw new Error(`${res.status}: ${bodyText}`);
+    }
+
+    // try parse json
+    try { return JSON.parse(bodyText); } catch { return bodyText; }
   }
 
   function showMsg(ok, text) {
@@ -196,50 +207,90 @@
     }
   }
 
+  function setButtonsForPhase(phase) {
+    // disable buttons according to phase to avoid 409 spam
+    if (!phase) {
+      lockBtn.disabled = true;
+      revealBtn.disabled = true;
+      lockBtn.classList.add("opacity-60", "cursor-not-allowed");
+      revealBtn.classList.add("opacity-60", "cursor-not-allowed");
+      return;
+    }
+
+    // reset
+    [lockBtn, revealBtn].forEach(b => b.classList.remove("opacity-60", "cursor-not-allowed"));
+    lockBtn.disabled = false;
+    revealBtn.disabled = false;
+
+    if (phase === "OPEN") {
+      lockBtn.disabled = false;
+      revealBtn.disabled = true;
+      revealBtn.classList.add("opacity-60", "cursor-not-allowed");
+    } else if (phase === "LOCKED") {
+      lockBtn.disabled = true;
+      lockBtn.classList.add("opacity-60", "cursor-not-allowed");
+      revealBtn.disabled = false;
+    } else if (phase === "REVEALED") {
+      lockBtn.disabled = true;
+      revealBtn.disabled = true;
+      lockBtn.classList.add("opacity-60", "cursor-not-allowed");
+      revealBtn.classList.add("opacity-60", "cursor-not-allowed");
+    }
+  }
+
   async function refresh() {
     showMsg(true, "");
     try {
-      const active = await api("/api/active");
-      activeId.textContent = active.active || "—";
-      activePhase.textContent = active.phase || "—";
+      const data = await api("/api/active", { method: "GET" });
+      if (!data || !data.active) {
+        activeId.textContent = "—";
+        activePhase.textContent = "—";
+        lastKnownPhase = null;
+        setButtonsForPhase(null);
+        showMsg(false, "No active session. Start a new one.");
+        return;
+      }
+      activeId.textContent = data.active;
+      activePhase.textContent = data.phase || "—";
+      lastKnownPhase = data.phase || null;
+      setButtonsForPhase(lastKnownPhase);
     } catch (e) {
       showMsg(false, String(e.message || e));
     }
   }
 
-  async function requirePin() {
-    if (!adminPin) {
-      pinSection.classList.remove("hidden");
-      adminSection.classList.add("hidden");
-      setStatus(false, "Not authenticated");
-      return false;
-    }
+  function unlockUI() {
+    pinErr.classList.add("hidden");
     pinSection.classList.add("hidden");
     adminSection.classList.remove("hidden");
     setStatus(true, "Authenticated");
-    await refresh();
-    return true;
+    refresh();
   }
 
-  savePinBtn.addEventListener("click", async () => {
-    pinErr.classList.add("hidden");
-    const p = (pinInput.value || "").trim();
-    if (!p) {
+  function lockUI() {
+    adminSection.classList.add("hidden");
+    pinSection.classList.remove("hidden");
+    setStatus(false, "Not authenticated");
+    showMsg(true, "");
+  }
+
+  savePinBtn.addEventListener("click", () => {
+    const pin = (pinInput.value || "").trim();
+    if (!pin) {
       pinErr.textContent = "PIN required.";
       pinErr.classList.remove("hidden");
       return;
     }
-    // We don't validate PIN until you call an admin endpoint.
-    adminPin = p;
+    adminPin = pin;
     sessionStorage.setItem(PIN_KEY, adminPin);
-    await requirePin();
+    unlockUI();
   });
 
   clearPinBtn.addEventListener("click", () => {
     adminPin = "";
     sessionStorage.removeItem(PIN_KEY);
     pinInput.value = "";
-    requirePin();
+    lockUI();
   });
 
   refreshBtn.addEventListener("click", refresh);
@@ -247,11 +298,11 @@
   newSessionBtn.addEventListener("click", async () => {
     showMsg(true, "");
     try {
-      const out = await api("/api/admin/session/new", {
+      await api("/api/admin/session/new", {
         method: "POST",
-        headers: { "x-admin-pin": adminPin }
+        headers: { "X-Admin-Pin": adminPin }
       });
-      showMsg(true, `New session started: ${out.sessionId}`);
+      showMsg(true, "New session started. Tell everyone to join + pre-rank.");
       await refresh();
     } catch (e) {
       showMsg(false, String(e.message || e));
@@ -261,14 +312,15 @@
   lockBtn.addEventListener("click", async () => {
     showMsg(true, "");
     try {
-      const out = await api("/api/admin/session/lock", {
+      await api("/api/admin/session/lock", {
         method: "POST",
-        headers: { "x-admin-pin": adminPin }
+        headers: { "X-Admin-Pin": adminPin }
       });
-      showMsg(true, `Locked. Lineup: ${ (out.lineup || []).join(", ") }`);
+      showMsg(true, "Locked. Lineup generated. Blind tasting is live.");
       await refresh();
     } catch (e) {
       showMsg(false, String(e.message || e));
+      await refresh();
     }
   });
 
@@ -277,17 +329,27 @@
     try {
       await api("/api/admin/session/reveal", {
         method: "POST",
-        headers: { "x-admin-pin": adminPin }
+        headers: { "X-Admin-Pin": adminPin }
       });
-      showMsg(true, "Revealed. The damage is done.");
+      showMsg(true, "Revealed. Names + bottles should now show on the session page.");
       await refresh();
     } catch (e) {
       showMsg(false, String(e.message || e));
+      await refresh();
     }
   });
 
-  // boot
-  requirePin();
+  // init
+  if (adminPin) {
+    unlockUI();
+  } else {
+    lockUI();
+  }
+
+  // Optional: keep phase fresh
+  setInterval(() => {
+    if (adminPin) refresh();
+  }, 5000);
 </script>
 </body>
 </html>
