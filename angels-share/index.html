@@ -262,9 +262,35 @@
         </div>
         <p class="text-[#c9ad92] text-xs mt-1">Only stored on your device.</p>
 
-        <textarea id="notesText" rows="6" placeholder="Aroma… palate… finish… vibes…"
-          class="mt-4 w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary"></textarea>
-
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="text-primary text-xs font-bold uppercase tracking-wider">Nose</label>
+          <textarea id="notesNose" rows="2" placeholder="Aroma…"
+            class="mt-2 w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary"></textarea>
+        </div>
+      
+        <div>
+          <label class="text-primary text-xs font-bold uppercase tracking-wider">Palate</label>
+          <textarea id="notesPalate" rows="2" placeholder="Taste / texture…"
+            class="mt-2 w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary"></textarea>
+        </div>
+      
+        <div>
+          <label class="text-primary text-xs font-bold uppercase tracking-wider">Finish</label>
+          <textarea id="notesFinish" rows="2" placeholder="Aftertaste / length…"
+            class="mt-2 w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary"></textarea>
+        </div>
+      
+        <div class="pt-1">
+          <div class="flex items-center justify-between">
+            <label class="text-primary text-xs font-bold uppercase tracking-wider">Rating</label>
+            <span id="notesRatingLabel" class="text-[#c9ad92] text-xs">— / 10</span>
+          </div>
+          <input id="notesRating" type="range" min="0" max="10" step="1"
+            class="mt-2 w-full accent-[color:var(--tw-color-primary)]"/>
+        </div>
+      </div>
+        
         <button id="saveNotesBtn"
           class="mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
           Save Notes
@@ -315,7 +341,12 @@
 
   const notesModal = $("notesModal");
   const notesBottleLabel = $("notesBottleLabel");
-  const notesText = $("notesText");
+  const notesNose = $("notesNose");
+  const notesPalate = $("notesPalate");
+  const notesFinish = $("notesFinish");
+  const notesRating = $("notesRating");
+  const notesRatingLabel = $("notesRatingLabel");
+
   const closeNotesBtn = $("closeNotesBtn");
   const saveNotesBtn = $("saveNotesBtn");
 
@@ -420,6 +451,41 @@
     autoSaveTimer = setTimeout(() => savePreRank(true), 650);
   }
 
+  function parseNotes(raw) {
+  // Backward compat: if old format was a string, treat as palate
+  if (!raw) return { nose: "", palate: "", finish: "", rating: 0 };
+  try {
+    const obj = JSON.parse(raw);
+    if (typeof obj === "string") {
+      return { nose: "", palate: obj, finish: "", rating: 0 };
+    }
+    return {
+      nose: obj.nose || "",
+      palate: obj.palate || "",
+      finish: obj.finish || "",
+      rating: Number.isFinite(obj.rating) ? obj.rating : 0
+    };
+  } catch {
+    // raw was plain text
+    return { nose: "", palate: raw, finish: "", rating: 0 };
+  }
+}
+
+function notesToString(n) {
+  return JSON.stringify({
+    nose: (n.nose || "").trim(),
+    palate: (n.palate || "").trim(),
+    finish: (n.finish || "").trim(),
+    rating: Math.max(0, Math.min(10, Number(n.rating) || 0))
+  });
+}
+
+function updateRatingLabel() {
+  const v = Number(notesRating.value || 0);
+  notesRatingLabel.textContent = `${v} / 10`;
+}
+notesRating.addEventListener("input", updateRatingLabel);
+
   async function savePreRank(silent = false) {
     preOk.classList.add("hidden");
     preErr.classList.add("hidden");
@@ -501,14 +567,24 @@
   }
 
   let notesCurrentCode = null;
-  function openNotes(code) {
-    notesCurrentCode = code;
-    notesBottleLabel.textContent = `Bottle ${code}`;
-    notesText.value = localStorage.getItem(notesKey(currentSessionId, code)) || "";
-    notesModal.classList.remove("hidden");
-    notesModal.classList.add("flex");
-    setTimeout(() => notesText.focus(), 50);
-  }
+function openNotes(code) {
+  notesCurrentCode = code;
+  notesBottleLabel.textContent = `Bottle ${code}`;
+
+  const raw = localStorage.getItem(notesKey(currentSessionId, code)) || "";
+  const n = parseNotes(raw);
+
+  notesNose.value = n.nose;
+  notesPalate.value = n.palate;
+  notesFinish.value = n.finish;
+  notesRating.value = String(n.rating ?? 0);
+  updateRatingLabel();
+
+  notesModal.classList.remove("hidden");
+  notesModal.classList.add("flex");
+  setTimeout(() => notesNose.focus(), 50);
+}
+  
   function closeNotes() {
     notesModal.classList.add("hidden");
     notesModal.classList.remove("flex");
@@ -516,14 +592,18 @@
   }
   closeNotesBtn.addEventListener("click", closeNotes);
   notesModal.addEventListener("click", (e) => { if (e.target === notesModal) closeNotes(); });
-  saveNotesBtn.addEventListener("click", () => {
-    if (!notesCurrentCode) return;
-    localStorage.setItem(notesKey(currentSessionId, notesCurrentCode), notesText.value || "");
-    closeNotes();
-    // Re-render list to show "NOTES SAVED" badges
-    // (lineup will be re-rendered on next poll anyway, but we do it now for instant feedback)
-    loadAndRender(true);
+saveNotesBtn.addEventListener("click", () => {
+  if (!notesCurrentCode) return;
+  const payload = notesToString({
+    nose: notesNose.value,
+    palate: notesPalate.value,
+    finish: notesFinish.value,
+    rating: notesRating.value
   });
+  localStorage.setItem(notesKey(currentSessionId, notesCurrentCode), payload);
+  closeNotes();
+  loadAndRender(true);
+});
 
   // ===== LOCKED: rankings (preserve across polling) =====
   function enforceUniqueRanks() {
