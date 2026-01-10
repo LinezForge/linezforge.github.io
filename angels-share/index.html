@@ -2,14 +2,14 @@
 <html class="dark" lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>The Angel’s Share — Live Session</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Angel’s Share — Session</title>
 
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
-  <script id="tailwind-config">
+  <script>
     tailwind.config = {
       darkMode: "class",
       theme: {
@@ -28,169 +28,159 @@
           },
         },
       },
-    }
+    };
   </script>
 
   <style>
     .material-symbols-outlined{
       font-variation-settings:'FILL' 0,'wght' 500,'GRAD' 0,'opsz' 24;
     }
-    body{font-family:'Space Grotesk',sans-serif;}
-    body{min-height:max(884px,100dvh);}
+    body{font-family:'Space Grotesk',sans-serif; min-height:max(884px,100dvh);}
   </style>
 </head>
 
 <body class="bg-background-light dark:bg-background-dark min-h-screen">
   <div class="relative flex h-full min-h-screen w-full flex-col bg-background-light dark:bg-background-dark max-w-[430px] mx-auto shadow-2xl overflow-x-hidden">
 
-    <!-- TopAppBar -->
+    <!-- Top bar -->
     <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-white/5">
-      <div class="text-primary flex size-12 shrink-0 items-center justify-start cursor-pointer" title="The Angel’s Share">
+      <div class="text-primary flex size-12 shrink-0 items-center justify-start cursor-default">
         <span class="material-symbols-outlined">liquor</span>
       </div>
 
       <div class="flex flex-col items-center">
-        <h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center">The Angel’s Share</h2>
+        <h2 id="titleText" class="text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center">Session</h2>
         <div class="flex items-center gap-1">
           <div id="statusDot" class="size-2 rounded-full bg-gray-500"></div>
-          <span id="statusText" class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Checking session…</span>
+          <span id="statusText" class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Checking…</span>
         </div>
       </div>
 
       <div class="flex w-12 items-center justify-end">
-        <a href="/admin" class="flex items-center justify-center rounded-lg h-12 bg-transparent text-gray-900 dark:text-white p-0" title="Admin">
+        <a href="/angels-share/admin/" class="flex items-center justify-center rounded-lg h-12 bg-transparent text-white p-0" title="Admin">
           <span class="material-symbols-outlined">admin_panel_settings</span>
         </a>
       </div>
     </div>
 
-    <!-- No active session -->
-    <section id="noSessionSection" class="hidden px-4 pt-8">
+    <!-- Headline -->
+    <div class="px-4 pt-6 pb-2">
+      <h3 class="text-white tracking-tight text-2xl font-bold leading-tight text-left">The Angel’s Share</h3>
+      <p class="text-[#c9ad92] text-sm mt-1">Neat preferred. Drop water tolerated. Bad whisky will be mocked.</p>
+    </div>
+
+    <!-- JOIN -->
+    <section id="joinSection" class="px-4 pt-4">
       <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-        <div class="flex items-center gap-3">
-          <div class="size-12 rounded-xl bg-white/10 flex items-center justify-center">
-            <span class="material-symbols-outlined text-primary text-[28px]">hourglass_empty</span>
-          </div>
-          <div>
-            <h3 class="text-white text-lg font-bold">No live session</h3>
-            <p class="text-[#c9ad92] text-xs mt-1">Ask the host to start one in /admin.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+        <p class="text-white font-bold">Join the live session</p>
+        <p class="text-[#c9ad92] text-xs mt-1">Your name is stored for this session only.</p>
 
-    <!-- Join (no token) -->
-    <section id="joinSection" class="hidden px-4 pt-6">
-      <h3 class="text-white text-2xl font-bold tracking-tight">Join the Session</h3>
-      <p class="text-[#c9ad92] text-sm mt-1">Pick a name. No accounts. No fuss.</p>
+        <label class="block mt-4 text-primary text-xs font-bold uppercase tracking-wider">Your name</label>
+        <input id="nameInput" type="text" placeholder="e.g. Linez"
+          class="mt-2 w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary"/>
 
-      <div class="mt-5 rounded-2xl border border-white/10 bg-white/5 p-5">
-        <label class="text-primary text-xs font-bold uppercase tracking-wider">Display name</label>
-        <input id="nameInput" type="text" maxlength="40" placeholder="e.g. Linez"
-               class="mt-2 w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary" />
         <button id="joinBtn"
-                class="mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+          class="mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
           Join
-          <span class="material-symbols-outlined">arrow_forward</span>
+          <span class="material-symbols-outlined">login</span>
         </button>
+
         <p id="joinErr" class="hidden mt-3 text-xs text-red-300 bg-red-950/30 border border-red-400/20 rounded-lg p-3"></p>
       </div>
     </section>
 
-    <!-- OPEN phase: My bottle (only me) -->
-    <section id="myBottleSection" class="hidden px-4 pt-6 pb-2">
-      <h3 class="text-white tracking-tight text-2xl font-bold leading-tight text-left">Your Guest Bottle</h3>
-      <p class="text-[#c9ad92] text-sm mt-1">“What do I think I’ve brought… before the whisky has a say?”</p>
-
-      <div class="mt-5 rounded-2xl border border-primary/20 bg-white/5 p-5 overflow-hidden relative">
-        <div class="absolute top-0 right-0 p-3 opacity-20">
-          <span class="material-symbols-outlined text-4xl">local_bar</span>
-        </div>
-
-        <div class="flex items-center justify-between">
+    <!-- OPEN: MY BOTTLE -->
+    <section id="myBottleSection" class="px-4 pt-4 hidden">
+      <div class="rounded-2xl border border-primary/20 bg-white/5 p-5">
+        <div class="flex items-start justify-between gap-3">
           <div>
-            <p class="text-white font-bold text-lg leading-tight">Hi, <span id="meName">—</span></p>
-            <p class="text-[#c9ad92] text-xs">Set your pre-rank. Bottle name is optional (and stays hidden until reveal).</p>
+            <p class="text-white font-bold">Your guest bottle</p>
+            <p class="text-[#c9ad92] text-xs mt-1">“What do I think I’ve brought… before the whisky has a say?”</p>
           </div>
-          <button id="logoutBtn" class="rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-white px-3 py-2 text-xs font-bold flex items-center gap-2">
-            <span class="material-symbols-outlined text-[18px]">logout</span> Reset
-          </button>
+          <div class="text-right">
+            <p class="text-[10px] uppercase tracking-widest text-primary font-bold">OPEN</p>
+            <p class="text-[#c9ad92] text-xs">Hi, <span id="meName">—</span></p>
+          </div>
         </div>
 
-        <div class="mt-4">
-          <label class="text-primary text-xs font-bold uppercase tracking-wider">Pre-rank</label>
+        <div class="mt-5">
+          <p class="text-primary text-xs font-bold uppercase tracking-wider">Pre-rank (your own bottle)</p>
           <div class="mt-2 grid grid-cols-3 gap-2">
-            <button data-rank="SPECIAL" class="rankChip rounded-xl border border-white/10 bg-black/20 text-white px-3 py-3 text-sm font-bold hover:border-primary/30">
+            <button class="rankChip rounded-xl border border-white/10 bg-black/20 hover:bg-white/10 text-white py-3 text-xs font-bold"
+              data-rank="SPECIAL">
+              <span class="material-symbols-outlined text-[18px] align-[-4px]">star</span>
               Special
-              <div class="text-[10px] font-medium text-[#c9ad92] mt-1">trusted</div>
             </button>
-            <button data-rank="MYSTERY" class="rankChip rounded-xl border border-white/10 bg-black/20 text-white px-3 py-3 text-sm font-bold hover:border-primary/30">
+            <button class="rankChip rounded-xl border border-white/10 bg-black/20 hover:bg-white/10 text-white py-3 text-xs font-bold"
+              data-rank="MYSTERY">
+              <span class="material-symbols-outlined text-[18px] align-[-4px]">help</span>
               Mystery
-              <div class="text-[10px] font-medium text-[#c9ad92] mt-1">curious</div>
             </button>
-            <button data-rank="WILD" class="rankChip rounded-xl border border-white/10 bg-black/20 text-white px-3 py-3 text-sm font-bold hover:border-primary/30">
+            <button class="rankChip rounded-xl border border-white/10 bg-black/20 hover:bg-white/10 text-white py-3 text-xs font-bold"
+              data-rank="WILD">
+              <span class="material-symbols-outlined text-[18px] align-[-4px]">bolt</span>
               Wild
-              <div class="text-[10px] font-medium text-[#c9ad92] mt-1">chaos</div>
             </button>
           </div>
+          <p class="mt-2 text-[#c9ad92] text-xs">
+            Special = trusted showcase • Mystery = curious gamble • Wild = chaos accepted
+          </p>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-5">
           <label class="text-primary text-xs font-bold uppercase tracking-wider">Bottle name (optional)</label>
-          <input id="bottleNameInput" type="text" maxlength="80" placeholder="e.g. Lagavulin 16 (optional)"
-                 class="mt-2 w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary" />
+          <input id="bottleNameInput" type="text" placeholder="e.g. Ardbeg Uigeadail"
+            class="mt-2 w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary"/>
+          <p class="mt-2 text-[#c9ad92] text-xs">Hidden until reveal.</p>
         </div>
 
         <button id="savePreBtn"
-                class="mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+          class="mt-5 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
           Save My Pre-Rank
-          <span class="material-symbols-outlined">lock</span>
+          <span class="material-symbols-outlined">check_circle</span>
         </button>
 
-        <p id="preOk" class="hidden mt-3 text-xs text-emerald-200 bg-emerald-950/25 border border-emerald-400/15 rounded-lg p-3">
-          Saved. See you at first pour. 🥃
-        </p>
+        <p id="preOk" class="hidden mt-3 text-xs text-emerald-200 bg-emerald-950/25 border border-emerald-400/15 rounded-lg p-3"></p>
         <p id="preErr" class="hidden mt-3 text-xs text-red-300 bg-red-950/30 border border-red-400/20 rounded-lg p-3"></p>
-      </div>
-
-      <div class="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-        <p class="text-white text-sm font-bold">Tonight’s rule (in one breath)</p>
-        <p class="text-[#c9ad92] text-xs mt-1">
-          One dram. One guest bottle. Except when it’s not. You pre-rank your own bottle now. We’ll go blind after lock.
-        </p>
       </div>
     </section>
 
-    <!-- LOCKED / blind tasting -->
-    <section id="blindSection" class="hidden">
-      <div class="px-4 pt-6 pb-2">
-        <h3 class="text-white tracking-tight text-2xl font-bold leading-tight text-left">Blind Tasting Active</h3>
-        <p class="text-[#c9ad92] text-sm mt-1">Tap a bottle to record notes. No reveals until the end.</p>
-      </div>
+    <!-- LOCKED: BLIND TASTING -->
+    <section id="blindSection" class="px-4 pt-4 hidden">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-white font-bold">Blind tasting active</p>
+            <p class="text-[#c9ad92] text-xs mt-1">Tap a bottle to write notes. Rank after drinking. Reveal later.</p>
+          </div>
+          <div class="text-right">
+            <p class="text-[10px] uppercase tracking-widest text-primary font-bold">LOCKED</p>
+          </div>
+        </div>
 
-      <div class="flex flex-col gap-2 px-3" id="bottleList"></div>
+        <div id="lineupList" class="mt-4 flex flex-col gap-2"></div>
 
-      <!-- Rankings -->
-      <div class="px-4 py-6 mt-4" id="rankingsSection">
-        <div class="bg-white/5 dark:bg-[#2d2217] rounded-xl border border-primary/20 p-5 overflow-hidden relative">
-          <div class="absolute top-0 right-0 p-3 opacity-20">
-            <span class="material-symbols-outlined text-4xl">auto_draw_solid</span>
+        <!-- Final Rankings -->
+        <div class="mt-5 rounded-xl border border-primary/20 bg-[#2d2217] p-4">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-white font-bold">Final Rankings</p>
+              <p class="text-[#c9ad92] text-xs mt-1">Assign one unique bottle to each category.</p>
+            </div>
+            <span class="material-symbols-outlined text-white/30">auto_draw_solid</span>
           </div>
 
-          <h4 class="text-white text-xl font-bold mb-1">Final Rankings</h4>
-          <p class="text-[#c9ad92] text-xs mb-6">Assign one unique bottle to each category below.</p>
-
-          <div class="space-y-4">
-            <div class="flex flex-col gap-2">
+          <div class="mt-4 space-y-4">
+            <div>
               <div class="flex justify-between items-center">
                 <label class="text-primary text-xs font-bold uppercase tracking-wider flex items-center gap-2">
                   <span class="material-symbols-outlined text-sm">star</span> Special
                 </label>
-                <span class="text-[10px] text-gray-500 italic">Your favourite</span>
+                <span class="text-[10px] text-gray-500 italic">Your favorite</span>
               </div>
-              <div class="relative">
-                <select id="rankSpecial" class="w-full bg-background-dark/50 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary appearance-none">
-                  <option value="">Select Bottle...</option>
+              <div class="relative mt-2">
+                <select id="rankSpecial" class="w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary appearance-none">
+                  <option value="">Select Bottle…</option>
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
                   <span class="material-symbols-outlined">expand_more</span>
@@ -198,16 +188,16 @@
               </div>
             </div>
 
-            <div class="flex flex-col gap-2">
+            <div>
               <div class="flex justify-between items-center">
                 <label class="text-primary text-xs font-bold uppercase tracking-wider flex items-center gap-2">
                   <span class="material-symbols-outlined text-sm">help</span> Mystery
                 </label>
-                <span class="text-[10px] text-gray-500 italic">Most puzzling</span>
+                <span class="text-[10px] text-gray-500 italic">Hardest to identify</span>
               </div>
-              <div class="relative">
-                <select id="rankMystery" class="w-full bg-background-dark/50 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary appearance-none">
-                  <option value="">Select Bottle...</option>
+              <div class="relative mt-2">
+                <select id="rankMystery" class="w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary appearance-none">
+                  <option value="">Select Bottle…</option>
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
                   <span class="material-symbols-outlined">expand_more</span>
@@ -215,472 +205,241 @@
               </div>
             </div>
 
-            <div class="flex flex-col gap-2">
+            <div>
               <div class="flex justify-between items-center">
                 <label class="text-primary text-xs font-bold uppercase tracking-wider flex items-center gap-2">
                   <span class="material-symbols-outlined text-sm">bolt</span> Wild
                 </label>
-                <span class="text-[10px] text-gray-500 italic">Most unique</span>
+                <span class="text-[10px] text-gray-500 italic">Most unique profile</span>
               </div>
-              <div class="relative">
-                <select id="rankWild" class="w-full bg-background-dark/50 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary appearance-none">
-                  <option value="">Select Bottle...</option>
+              <div class="relative mt-2">
+                <select id="rankWild" class="w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary appearance-none">
+                  <option value="">Select Bottle…</option>
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
                   <span class="material-symbols-outlined">expand_more</span>
                 </div>
               </div>
             </div>
-
-            <div id="rankError" class="hidden text-xs text-red-300 bg-red-950/30 border border-red-400/20 rounded-lg p-3"></div>
-            <div id="rankOk" class="hidden text-xs text-emerald-200 bg-emerald-950/25 border border-emerald-400/15 rounded-lg p-3"></div>
           </div>
-        </div>
-      </div>
 
-      <div class="px-4 pb-10">
-        <button id="submitBtn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
-          Submit My Rankings
-          <span class="material-symbols-outlined">lock_open</span>
-        </button>
-        <p class="text-center text-[#c9ad92]/60 text-[10px] mt-4 uppercase tracking-[0.2em]">Rankings are final once submitted</p>
+          <button id="submitBtn"
+            class="mt-5 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+            Submit My Rankings
+            <span class="material-symbols-outlined">lock_open</span>
+          </button>
+
+          <p id="rankOk" class="hidden mt-3 text-xs text-emerald-200 bg-emerald-950/25 border border-emerald-400/15 rounded-lg p-3"></p>
+          <p id="rankErr" class="hidden mt-3 text-xs text-red-300 bg-red-950/30 border border-red-400/20 rounded-lg p-3"></p>
+          <p class="text-center text-[#c9ad92]/60 text-[10px] mt-4 uppercase tracking-[0.2em]">Rankings are final once submitted</p>
+        </div>
       </div>
     </section>
 
-    <!-- Reveal -->
-    <section id="revealSection" class="hidden px-4 pb-10">
-      <div class="rounded-2xl border border-primary/20 bg-white/5 p-5">
-        <div class="flex items-center gap-3">
-          <div class="size-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <span class="material-symbols-outlined text-primary text-[28px]">visibility</span>
-          </div>
+    <!-- REVEAL -->
+    <section id="revealSection" class="px-4 pt-4 hidden">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <div class="flex items-start justify-between">
           <div>
-            <h3 class="text-white text-lg font-bold">Reveal</h3>
-            <p class="text-[#c9ad92] text-xs mt-1">This is where confidence goes to die.</p>
+            <p class="text-white font-bold">Reveal</p>
+            <p class="text-[#c9ad92] text-xs mt-1">The angels have spoken. The bottles have names.</p>
           </div>
+          <p class="text-[10px] uppercase tracking-widest text-primary font-bold">REVEALED</p>
         </div>
 
-        <div id="revealList" class="mt-4 space-y-2"></div>
+        <div id="revealList" class="mt-4 flex flex-col gap-2"></div>
       </div>
     </section>
 
     <!-- Notes Modal -->
-    <div id="notesModal" class="fixed inset-0 z-50 hidden">
-      <div class="absolute inset-0 bg-black/70"></div>
-      <div class="absolute inset-x-0 bottom-0 max-w-[430px] mx-auto">
-        <div class="bg-background-dark border border-white/10 rounded-t-2xl p-4 shadow-2xl">
-          <div class="flex items-center justify-between">
-            <div>
-              <p id="modalTitle" class="text-white font-bold text-lg leading-tight">Bottle A</p>
-              <p class="text-[#c9ad92] text-xs">Record tasting notes (saved to this device)</p>
-            </div>
-            <button id="closeModalBtn" class="text-white/80 hover:text-white rounded-full bg-white/10 size-10 flex items-center justify-center" title="Close">
-              <span class="material-symbols-outlined">close</span>
-            </button>
-          </div>
-
-          <div class="mt-4 space-y-3">
-            <div>
-              <label class="text-primary text-xs font-bold uppercase tracking-wider">Nose</label>
-              <textarea id="noteNose" rows="2" class="mt-1 w-full bg-black/20 border border-white/10 rounded-lg p-3 text-white text-sm focus:ring-primary focus:border-primary" placeholder="e.g. vanilla, citrus, smoke…"></textarea>
-            </div>
-
-            <div>
-              <label class="text-primary text-xs font-bold uppercase tracking-wider">Palate</label>
-              <textarea id="notePalate" rows="2" class="mt-1 w-full bg-black/20 border border-white/10 rounded-lg p-3 text-white text-sm focus:ring-primary focus:border-primary" placeholder="e.g. caramel, oak, pepper…"></textarea>
-            </div>
-
-            <div>
-              <label class="text-primary text-xs font-bold uppercase tracking-wider">Finish</label>
-              <textarea id="noteFinish" rows="2" class="mt-1 w-full bg-black/20 border border-white/10 rounded-lg p-3 text-white text-sm focus:ring-primary focus:border-primary" placeholder="e.g. long, dry, smoky…"></textarea>
-            </div>
-
-            <div class="flex items-center gap-3">
-              <div class="flex-1">
-                <label class="text-primary text-xs font-bold uppercase tracking-wider">Score</label>
-                <select id="noteScore" class="mt-1 w-full bg-black/20 border border-white/10 rounded-lg py-3 px-3 text-white text-sm focus:ring-primary focus:border-primary">
-                  <option value="">—</option>
-                  <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-                  <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-                </select>
-              </div>
-
-              <button id="clearNotesBtn" class="mt-6 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-white px-4 py-3 text-sm font-bold flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">delete</span> Clear
-              </button>
-            </div>
-
-            <button id="saveNotesBtn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
-              Save Notes
-              <span class="material-symbols-outlined">check</span>
-            </button>
-
-            <p class="text-center text-[#c9ad92]/60 text-[10px] uppercase tracking-[0.2em]">Nothing reveals until you do</p>
-          </div>
+    <div id="notesModal" class="fixed inset-0 hidden items-end justify-center bg-black/60 z-50">
+      <div class="w-full max-w-[430px] rounded-t-3xl bg-background-dark border border-white/10 p-5">
+        <div class="flex items-center justify-between">
+          <p class="text-white font-bold">Notes for <span id="notesBottleLabel">—</span></p>
+          <button id="closeNotesBtn" class="rounded-full bg-white/10 hover:bg-white/15 border border-white/10 text-white w-10 h-10 flex items-center justify-center">
+            <span class="material-symbols-outlined">close</span>
+          </button>
         </div>
+        <p class="text-[#c9ad92] text-xs mt-1">Only stored on your device.</p>
+
+        <textarea id="notesText" rows="6" placeholder="Aroma… palate… finish… vibes…"
+          class="mt-4 w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary"></textarea>
+
+        <button id="saveNotesBtn"
+          class="mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+          Save Notes
+          <span class="material-symbols-outlined">done</span>
+        </button>
       </div>
     </div>
 
+    <!-- Spacer -->
+    <div class="h-10"></div>
   </div>
 
 <script>
-  // -------------------------
-  // Online session wiring (Cloudflare Pages Functions)
-  // -------------------------
+  // ===== Config =====
   const API = "https://api.linezforge.com";
-  const ACTIVE_KEY = "angelsShare:activeSessionId";
+  const TOKEN_KEY = "angelsShare:token";
 
+  // ===== DOM =====
   const $ = (id) => document.getElementById(id);
 
+  const titleText = $("titleText");
   const statusDot = $("statusDot");
   const statusText = $("statusText");
 
-  const noSessionSection = $("noSessionSection");
   const joinSection = $("joinSection");
-  const myBottleSection = $("myBottleSection");
-  const blindSection = $("blindSection");
-  const revealSection = $("revealSection");
-
   const nameInput = $("nameInput");
   const joinBtn = $("joinBtn");
   const joinErr = $("joinErr");
 
+  const myBottleSection = $("myBottleSection");
   const meName = $("meName");
   const bottleNameInput = $("bottleNameInput");
   const savePreBtn = $("savePreBtn");
   const preOk = $("preOk");
   const preErr = $("preErr");
-  const logoutBtn = $("logoutBtn");
 
-  const bottleList = $("bottleList");
-
+  const blindSection = $("blindSection");
+  const lineupList = $("lineupList");
   const rankSpecial = $("rankSpecial");
   const rankMystery = $("rankMystery");
   const rankWild = $("rankWild");
   const submitBtn = $("submitBtn");
-  const rankError = $("rankError");
   const rankOk = $("rankOk");
+  const rankErr = $("rankErr");
 
+  const revealSection = $("revealSection");
   const revealList = $("revealList");
 
-  // Notes modal (local-only)
   const notesModal = $("notesModal");
-  const modalTitle = $("modalTitle");
-  const closeModalBtn = $("closeModalBtn");
+  const notesBottleLabel = $("notesBottleLabel");
+  const notesText = $("notesText");
+  const closeNotesBtn = $("closeNotesBtn");
   const saveNotesBtn = $("saveNotesBtn");
-  const clearNotesBtn = $("clearNotesBtn");
-  const noteNose = $("noteNose");
-  const notePalate = $("notePalate");
-  const noteFinish = $("noteFinish");
-  const noteScore = $("noteScore");
-  let activeBottleId = null;
 
+  // ===== State =====
+  let myToken = localStorage.getItem(TOKEN_KEY) || "";
   let currentSessionId = null;
-  let myToken = null;
+
+  // OPEN draft state (prevents polling clobber)
   let selectedPreRank = null;
+  let draftDirtyOpen = false;
+  let autoSaveTimer = null;
+  let lastSavedOpen = { rank: null, bottle: "" };
 
-  function setStatus(phase) {
-    const map = {
-      null: { text: "Checking session…", dot: "bg-gray-500", textCls: "text-gray-400" },
-      "NONE": { text: "No session", dot: "bg-gray-500", textCls: "text-gray-400" },
-      "OPEN": { text: "Open (pre-rank)", dot: "bg-primary animate-pulse", textCls: "text-primary" },
-      "LOCKED": { text: "Locked (blind tasting)", dot: "bg-primary animate-pulse", textCls: "text-primary" },
-      "REVEALED": { text: "Revealed", dot: "bg-emerald-400", textCls: "text-emerald-300" },
-    };
-    const m = map[phase] || map.null;
-    statusText.textContent = m.text;
-    statusText.className = `text-[10px] uppercase tracking-widest font-bold ${m.textCls}`;
-    statusDot.className = `size-2 rounded-full ${m.dot}`;
-  }
+  // LOCKED draft state
+  let lastLineupSig = "";
+  let rankingDraftDirty = false;
 
-  function showOnly(section) {
-    [noSessionSection, joinSection, myBottleSection, blindSection, revealSection].forEach(el => el.classList.add("hidden"));
-    section.classList.remove("hidden");
+  // ===== Utilities =====
+  function setStatus(phase, msg) {
+    statusText.textContent = msg;
+    if (phase === "OPEN") {
+      statusDot.className = "size-2 rounded-full bg-emerald-400 animate-pulse";
+      statusText.className = "text-[10px] uppercase tracking-widest text-emerald-300 font-bold";
+      titleText.textContent = "Session (Open)";
+    } else if (phase === "LOCKED") {
+      statusDot.className = "size-2 rounded-full bg-primary animate-pulse";
+      statusText.className = "text-[10px] uppercase tracking-widest text-primary font-bold";
+      titleText.textContent = "Blind Tasting Active";
+    } else if (phase === "REVEALED") {
+      statusDot.className = "size-2 rounded-full bg-sky-400";
+      statusText.className = "text-[10px] uppercase tracking-widest text-sky-300 font-bold";
+      titleText.textContent = "Reveal";
+    } else {
+      statusDot.className = "size-2 rounded-full bg-gray-500";
+      statusText.className = "text-[10px] uppercase tracking-widest text-gray-400 font-bold";
+      titleText.textContent = "Session";
+    }
   }
 
   async function api(path, opts = {}) {
     const res = await fetch(`${API}${path}`, {
-      headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
+      headers: {
+        "Content-Type": "application/json",
+        ...(opts.headers || {}),
+      },
       ...opts,
     });
     if (!res.ok) throw new Error(await res.text());
-    return res.json();
+    const ct = res.headers.get("content-type") || "";
+    if (ct.includes("application/json")) return res.json();
+    return res.text();
   }
 
-  function tokenKey(sessionId) {
-    return `angelsShare:${sessionId}:token`;
+  function showOnly(section) {
+    [joinSection, myBottleSection, blindSection, revealSection].forEach(s => s.classList.add("hidden"));
+    section.classList.remove("hidden");
   }
 
-  function notesKey(sessionId) {
-    return `angelsShare:${sessionId}:notes`;
-  }
+  function tokenKey(sessionId) { return `angelsShare:${sessionId}:token`; }
+  function notesKey(sessionId, code) { return `angelsShare:${sessionId}:notes:${code}`; }
 
-  // ---------- Notes (local per device) ----------
-  function getNotesAll() {
-    try { return JSON.parse(localStorage.getItem(notesKey(currentSessionId)) || "{}"); }
+  // Vote draft persistence (LOCKED)
+  function voteDraftKey(sessionId) { return `angelsShare:${sessionId}:voteDraft`; }
+  function voteSubmittedKey(sessionId) { return `angelsShare:${sessionId}:voteSubmitted`; }
+
+  function getVoteDraft() {
+    try { return JSON.parse(localStorage.getItem(voteDraftKey(currentSessionId)) || "{}"); }
     catch { return {}; }
   }
-  function setNotesAll(obj) { localStorage.setItem(notesKey(currentSessionId), JSON.stringify(obj)); }
-  function hasNotes(bottleId) {
-    const all = getNotesAll();
-    const n = all[bottleId];
-    if (!n) return false;
-    return Boolean((n.nose || "").trim() || (n.palate || "").trim() || (n.finish || "").trim() || (n.score || "").trim());
+  function setVoteDraft(d) {
+    localStorage.setItem(voteDraftKey(currentSessionId), JSON.stringify(d || {}));
   }
-  function openNotes(bottleId) {
-    activeBottleId = bottleId;
-    modalTitle.textContent = `Bottle ${bottleId}`;
-    const all = getNotesAll();
-    const n = all[bottleId] || {};
-    noteNose.value = n.nose || "";
-    notePalate.value = n.palate || "";
-    noteFinish.value = n.finish || "";
-    noteScore.value = n.score || "";
-    notesModal.classList.remove("hidden");
+  function isVoteSubmitted() {
+    return localStorage.getItem(voteSubmittedKey(currentSessionId)) === "true";
   }
-  function closeNotes() {
-    notesModal.classList.add("hidden");
-    activeBottleId = null;
-  }
-  function saveNotes() {
-    if (!activeBottleId) return;
-    const all = getNotesAll();
-    all[activeBottleId] = {
-      nose: noteNose.value,
-      palate: notePalate.value,
-      finish: noteFinish.value,
-      score: noteScore.value,
-      savedAt: new Date().toISOString()
-    };
-    setNotesAll(all);
-    renderBottleList(window.__lineup || []);
-    closeNotes();
-  }
-  function clearNotes() {
-    if (!activeBottleId) return;
-    const all = getNotesAll();
-    delete all[activeBottleId];
-    setNotesAll(all);
-    renderBottleList(window.__lineup || []);
-    closeNotes();
+  function setVoteSubmitted(v) {
+    localStorage.setItem(voteSubmittedKey(currentSessionId), v ? "true" : "false");
   }
 
-  // ---------- UI Render ----------
+  // ===== OPEN: Pre-rank chip UI =====
   function setRankChipUI(rank) {
     document.querySelectorAll(".rankChip").forEach(btn => {
       const r = btn.getAttribute("data-rank");
-      const active = r === rank;
-      btn.classList.toggle("border-primary", active);
-      btn.classList.toggle("bg-primary/10", active);
-      btn.classList.toggle("shadow-lg", active);
-      btn.classList.toggle("shadow-primary/10", active);
-    });
-  }
-
-  function renderBottleList(lineup) {
-    bottleList.innerHTML = "";
-    lineup.forEach(code => {
-      const saved = hasNotes(code);
-      const row = document.createElement("button");
-      row.type = "button";
-      row.className = "w-full text-left flex items-center gap-4 bg-white/5 rounded-xl px-4 min-h-[80px] py-3 justify-between border border-transparent hover:border-primary/30 transition-colors";
-      row.innerHTML = `
-        <div class="flex items-center gap-4">
-          <div class="bg-zinc-800 flex items-center justify-center border border-white/10 rounded-lg size-16 relative overflow-hidden">
-            <div class="absolute inset-0 opacity-80" style="background: radial-gradient(circle at 30% 20%, rgba(236,127,19,0.25), transparent 55%), radial-gradient(circle at 70% 80%, rgba(255,255,255,0.10), transparent 55%);"></div>
-            <span class="text-white font-bold text-xl relative">${code}</span>
-          </div>
-
-          <div class="flex flex-col justify-center">
-            <p class="text-white text-base font-bold leading-normal line-clamp-1">Bottle ${code}</p>
-            <p class="${saved ? "text-[#c9ad92]" : "text-gray-400 italic"} text-xs font-medium leading-normal line-clamp-2">
-              ${saved ? "Notes captured" : "Tap to record flavor notes"}
-            </p>
-          </div>
-        </div>
-
-        <div class="shrink-0 flex items-center gap-2">
-          ${saved ? `<span class="text-primary text-[10px] font-bold px-2 py-1 bg-primary/10 rounded-full border border-primary/20">NOTES SAVED</span>` : ""}
-          <div class="text-white flex size-8 items-center justify-center rounded-full bg-white/10">
-            <span class="material-symbols-outlined text-[20px]">edit_note</span>
-          </div>
-        </div>
-      `;
-      row.addEventListener("click", () => openNotes(code));
-      bottleList.appendChild(row);
-    });
-  }
-
-  function fillRankSelects(lineup) {
-    const opts = lineup.map(code => `<option value="${code}">Bottle ${code}</option>`).join("");
-    [rankSpecial, rankMystery, rankWild].forEach(sel => sel.innerHTML = `<option value="">Select Bottle...</option>${opts}`);
-    enforceUniqueRanks();
-  }
-
-  function enforceUniqueRanks() {
-    const chosen = [rankSpecial.value, rankMystery.value, rankWild.value].filter(Boolean);
-    const dup = chosen.length !== new Set(chosen).size;
-
-    // Disable options used elsewhere
-    const used = new Set(chosen);
-    [rankSpecial, rankMystery, rankWild].forEach(sel => {
-      const current = sel.value;
-      Array.from(sel.options).forEach(opt => {
-        if (!opt.value) { opt.disabled = false; return; }
-        opt.disabled = used.has(opt.value) && opt.value !== current;
-      });
-    });
-
-    if (dup) {
-      rankError.textContent = "Please choose three different bottles (no duplicates).";
-      rankError.classList.remove("hidden");
-      rankOk.classList.add("hidden");
-      return false;
-    } else {
-      rankError.classList.add("hidden");
-      return true;
-    }
-  }
-
-  function renderReveal(reveal) {
-    revealList.innerHTML = "";
-    const codes = Object.keys(reveal || {}).sort();
-    codes.forEach(code => {
-      const r = reveal[code];
-      const pre = r.preRank ? r.preRank.charAt(0) + r.preRank.slice(1).toLowerCase() : "—";
-      const bottle = r.bottleName ? r.bottleName : "Bottle name hidden / not provided";
-      const card = document.createElement("div");
-      card.className = "rounded-xl border border-white/10 bg-black/20 p-4";
-      card.innerHTML = `
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <span class="text-primary font-black">${code}</span>
-            </div>
-            <div>
-              <p class="text-white font-bold">Bottle ${code}</p>
-              <p class="text-[#c9ad92] text-xs">Owner: <span class="text-white/90">${escapeHtml(r.ownerName || "Unknown")}</span></p>
-            </div>
-          </div>
-          <span class="text-[10px] font-bold px-2 py-1 bg-white/5 border border-white/10 rounded-full text-[#c9ad92]">${escapeHtml(pre)}</span>
-        </div>
-        <p class="mt-3 text-white/90 text-sm">${escapeHtml(bottle)}</p>
-      `;
-      revealList.appendChild(card);
-    });
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-
-  // ---------- Session bootstrap ----------
-  async function boot() {
-    setStatus(null);
-    try {
-      const active = await api("/api/active");
-      if (!active.active) {
-        currentSessionId = null;
-        localStorage.removeItem(ACTIVE_KEY);
-        setStatus("NONE");
-        showOnly(noSessionSection);
-        return;
+      if (r === rank) {
+        btn.className = "rankChip rounded-xl border border-primary/30 bg-primary/20 text-white py-3 text-xs font-bold";
+      } else {
+        btn.className = "rankChip rounded-xl border border-white/10 bg-black/20 hover:bg-white/10 text-white py-3 text-xs font-bold";
       }
-
-      currentSessionId = active.active;
-      localStorage.setItem(ACTIVE_KEY, currentSessionId);
-
-      myToken = localStorage.getItem(tokenKey(currentSessionId));
-
-      if (!myToken) {
-        setStatus(active.phase || "OPEN");
-        showOnly(joinSection);
-        return;
-      }
-
-      await loadAndRender();
-    } catch (e) {
-      setStatus("NONE");
-      showOnly(noSessionSection);
-    }
-  }
-
-  async function loadAndRender() {
-    const data = await api(`/api/session?token=${encodeURIComponent(myToken)}`);
-    setStatus(data.phase);
-
-    if (!data.me) {
-      // token not recognized (new session or cleared server); force re-join
-      localStorage.removeItem(tokenKey(currentSessionId));
-      myToken = null;
-      showOnly(joinSection);
-      return;
-    }
-
-    if (data.phase === "OPEN") {
-      showOnly(myBottleSection);
-      meName.textContent = data.me.name || "—";
-      bottleNameInput.value = data.me.bottleName || "";
-      selectedPreRank = data.me.preRank || null;
-      setRankChipUI(selectedPreRank);
-      return;
-    }
-
-    // LOCKED or REVEALED
-    showOnly(blindSection);
-    const lineup = data.lineup || [];
-    window.__lineup = lineup;
-
-    renderBottleList(lineup);
-    fillRankSelects(lineup);
-
-    // show reveal section if REVEALED
-    if (data.phase === "REVEALED") {
-      revealSection.classList.remove("hidden");
-      renderReveal(data.reveal || {});
-    } else {
-      revealSection.classList.add("hidden");
-    }
-  }
-
-  // ---------- Join ----------
-  joinBtn.addEventListener("click", async () => {
-    joinErr.classList.add("hidden");
-    const name = (nameInput.value || "").trim();
-    if (!name) {
-      joinErr.textContent = "Name required.";
-      joinErr.classList.remove("hidden");
-      return;
-    }
-    try {
-      const out = await api("/api/join", { method: "POST", body: JSON.stringify({ name }) });
-      currentSessionId = out.sessionId;
-      myToken = out.token;
-      localStorage.setItem(tokenKey(currentSessionId), myToken);
-      await loadAndRender();
-    } catch (e) {
-      joinErr.textContent = String(e.message || e);
-      joinErr.classList.remove("hidden");
-    }
-  });
-
-  // ---------- Pre-rank chips ----------
-  document.querySelectorAll(".rankChip").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedPreRank = btn.getAttribute("data-rank");
-      setRankChipUI(selectedPreRank);
-      preOk.classList.add("hidden");
-      preErr.classList.add("hidden");
     });
-  });
+  }
 
-  savePreBtn.addEventListener("click", async () => {
+  function markDraftDirtyOpen() {
+    draftDirtyOpen = true;
+    preOk.classList.add("hidden");
+    preErr.classList.add("hidden");
+  }
+
+  function scheduleAutoSaveOpen() {
+    if (!myToken) return;
+    if (!selectedPreRank) return;
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => savePreRank(true), 650);
+  }
+
+  async function savePreRank(silent = false) {
     preOk.classList.add("hidden");
     preErr.classList.add("hidden");
 
     if (!selectedPreRank) {
-      preErr.textContent = "Pick Special, Mystery, or Wild.";
-      preErr.classList.remove("hidden");
+      if (!silent) {
+        preErr.textContent = "Pick Special, Mystery, or Wild.";
+        preErr.classList.remove("hidden");
+      }
+      return;
+    }
+
+    const bottleVal = (bottleNameInput.value || "").trim();
+
+    if (lastSavedOpen.rank === selectedPreRank && lastSavedOpen.bottle === bottleVal) {
+      draftDirtyOpen = false;
+      if (!silent) {
+        preOk.textContent = "Saved.";
+        preOk.classList.remove("hidden");
+      }
       return;
     }
 
@@ -690,69 +449,352 @@
         body: JSON.stringify({
           token: myToken,
           preRank: selectedPreRank,
-          bottleName: bottleNameInput.value || ""
+          bottleName: bottleVal
         })
       });
-      preOk.classList.remove("hidden");
+
+      lastSavedOpen = { rank: selectedPreRank, bottle: bottleVal };
+      draftDirtyOpen = false;
+
+      if (!silent) {
+        preOk.textContent = "Saved. Hidden until reveal. 🪽";
+        preOk.classList.remove("hidden");
+      }
     } catch (e) {
-      preErr.textContent = String(e.message || e);
-      preErr.classList.remove("hidden");
+      if (!silent) {
+        preErr.textContent = String(e.message || e);
+        preErr.classList.remove("hidden");
+      }
     }
+  }
+
+  // ===== LOCKED: lineup + notes =====
+  function renderBottleList(lineup) {
+    lineupList.innerHTML = "";
+    lineup.forEach(code => {
+      const saved = localStorage.getItem(notesKey(currentSessionId, code)) || "";
+      const has = saved.trim().length > 0;
+
+      const row = document.createElement("div");
+      row.className = "flex items-center gap-4 bg-white/5 rounded-xl px-4 min-h-[80px] py-3 justify-between border border-transparent hover:border-primary/30 transition-colors cursor-pointer";
+      row.innerHTML = `
+        <div class="flex items-center gap-4">
+          <div class="bg-zinc-800 rounded-lg size-16 flex items-center justify-center border border-white/10 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-70" style="background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), rgba(0,0,0,0));"></div>
+            <span class="text-white font-bold text-xl">${code}</span>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="text-white text-base font-bold leading-normal line-clamp-1">Bottle ${code}</p>
+            <p class="text-gray-400 text-xs font-normal leading-normal line-clamp-2 italic">${has ? "Notes saved" : "Tap to record flavor notes"}</p>
+          </div>
+        </div>
+        <div class="shrink-0 flex items-center gap-2">
+          ${has ? `<span class="text-primary text-[10px] font-bold px-2 py-1 bg-primary/10 rounded-full border border-primary/20">NOTES SAVED</span>` : ""}
+          <div class="text-white flex size-8 items-center justify-center rounded-full bg-white/10">
+            <span class="material-symbols-outlined text-[20px]">edit_note</span>
+          </div>
+        </div>
+      `;
+      row.addEventListener("click", () => openNotes(code));
+      lineupList.appendChild(row);
+    });
+  }
+
+  let notesCurrentCode = null;
+  function openNotes(code) {
+    notesCurrentCode = code;
+    notesBottleLabel.textContent = `Bottle ${code}`;
+    notesText.value = localStorage.getItem(notesKey(currentSessionId, code)) || "";
+    notesModal.classList.remove("hidden");
+    notesModal.classList.add("flex");
+    setTimeout(() => notesText.focus(), 50);
+  }
+  function closeNotes() {
+    notesModal.classList.add("hidden");
+    notesModal.classList.remove("flex");
+    notesCurrentCode = null;
+  }
+  closeNotesBtn.addEventListener("click", closeNotes);
+  notesModal.addEventListener("click", (e) => { if (e.target === notesModal) closeNotes(); });
+  saveNotesBtn.addEventListener("click", () => {
+    if (!notesCurrentCode) return;
+    localStorage.setItem(notesKey(currentSessionId, notesCurrentCode), notesText.value || "");
+    closeNotes();
+    // Re-render list to show "NOTES SAVED" badges
+    // (lineup will be re-rendered on next poll anyway, but we do it now for instant feedback)
+    loadAndRender(true);
   });
 
-  logoutBtn.addEventListener("click", () => {
-    if (currentSessionId) localStorage.removeItem(tokenKey(currentSessionId));
-    myToken = null;
-    boot();
-  });
+  // ===== LOCKED: rankings (preserve across polling) =====
+  function enforceUniqueRanks() {
+    const vals = [rankSpecial.value, rankMystery.value, rankWild.value].filter(Boolean);
+    const dup = vals.length !== new Set(vals).size;
+    if (dup) {
+      rankErr.textContent = "Each bottle can only be used once (no duplicates).";
+      rankErr.classList.remove("hidden");
+    } else {
+      rankErr.classList.add("hidden");
+    }
+  }
 
-  // ---------- Ranking UI ----------
-  [rankSpecial, rankMystery, rankWild].forEach(sel => sel.addEventListener("change", enforceUniqueRanks));
+  function fillRankSelects(lineup) {
+    const sig = (lineup || []).join(",");
+    const draft = getVoteDraft();
+
+    const prev = {
+      special: rankSpecial.value || draft.special || "",
+      mystery: rankMystery.value || draft.mystery || "",
+      wild: rankWild.value || draft.wild || "",
+    };
+
+    if (sig !== lastLineupSig) {
+      const opts = lineup.map(code => `<option value="${code}">Bottle ${code}</option>`).join("");
+      const html = `<option value="">Select Bottle…</option>${opts}`;
+      rankSpecial.innerHTML = html;
+      rankMystery.innerHTML = html;
+      rankWild.innerHTML = html;
+      lastLineupSig = sig;
+    }
+
+    const valid = new Set(lineup || []);
+    if (valid.has(prev.special)) rankSpecial.value = prev.special;
+    if (valid.has(prev.mystery)) rankMystery.value = prev.mystery;
+    if (valid.has(prev.wild)) rankWild.value = prev.wild;
+
+    enforceUniqueRanks();
+  }
+
+  [rankSpecial, rankMystery, rankWild].forEach(sel => sel.addEventListener("change", () => {
+    rankingDraftDirty = true;
+    setVoteDraft({
+      special: rankSpecial.value || "",
+      mystery: rankMystery.value || "",
+      wild: rankWild.value || ""
+    });
+    enforceUniqueRanks();
+  }));
 
   submitBtn.addEventListener("click", async () => {
     rankOk.classList.add("hidden");
-    rankError.classList.add("hidden");
+    rankErr.classList.add("hidden");
 
     const s = rankSpecial.value;
     const m = rankMystery.value;
     const w = rankWild.value;
 
     if (!s || !m || !w) {
-      rankError.textContent = "Choose a bottle for Special, Mystery, and Wild.";
-      rankError.classList.remove("hidden");
+      rankErr.textContent = "Pick a bottle for Special, Mystery, and Wild.";
+      rankErr.classList.remove("hidden");
       return;
     }
-    if (!enforceUniqueRanks()) return;
+    if (new Set([s, m, w]).size !== 3) {
+      rankErr.textContent = "Each bottle can only be used once.";
+      rankErr.classList.remove("hidden");
+      return;
+    }
 
     try {
       await api("/api/vote", {
         method: "POST",
         body: JSON.stringify({ token: myToken, special: s, mystery: m, wild: w })
       });
+
+      setVoteSubmitted(true);
+      rankingDraftDirty = false;
+
+      rankSpecial.disabled = true;
+      rankMystery.disabled = true;
+      rankWild.disabled = true;
+      submitBtn.disabled = true;
+      submitBtn.classList.add("opacity-60", "cursor-not-allowed");
+
       rankOk.textContent = "Rankings submitted. See you at the reveal. 🥃";
       rankOk.classList.remove("hidden");
     } catch (e) {
-      rankError.textContent = String(e.message || e);
-      rankError.classList.remove("hidden");
+      rankErr.textContent = String(e.message || e);
+      rankErr.classList.remove("hidden");
     }
   });
 
-  // Notes modal events
-  closeModalBtn.addEventListener("click", closeNotes);
-  notesModal.addEventListener("click", (e) => {
-    if (e.target === notesModal || e.target.classList.contains("bg-black/70")) closeNotes();
+  // ===== Join flow =====
+  joinBtn.addEventListener("click", async () => {
+    joinErr.classList.add("hidden");
+    const name = (nameInput.value || "").trim();
+    if (!name) {
+      joinErr.textContent = "Name required.";
+      joinErr.classList.remove("hidden");
+      return;
+    }
+    try {
+      const data = await api("/api/join", {
+        method: "POST",
+        body: JSON.stringify({ name })
+      });
+      myToken = data.token;
+      localStorage.setItem(TOKEN_KEY, myToken);
+      currentSessionId = data.sessionId;
+      localStorage.setItem(tokenKey(currentSessionId), myToken);
+      await loadAndRender(true);
+    } catch (e) {
+      joinErr.textContent = String(e.message || e);
+      joinErr.classList.remove("hidden");
+    }
   });
-  saveNotesBtn.addEventListener("click", saveNotes);
-  clearNotesBtn.addEventListener("click", clearNotes);
 
-  // Poll for phase changes (host lock/reveal)
-  setInterval(async () => {
-    if (!myToken) return;
-    try { await loadAndRender(); } catch (_) {}
-  }, 4000);
+  // OPEN interaction listeners
+  document.querySelectorAll(".rankChip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedPreRank = btn.getAttribute("data-rank");
+      setRankChipUI(selectedPreRank);
+      markDraftDirtyOpen();
+      scheduleAutoSaveOpen();
+    });
+  });
 
-  // Start
-  boot();
+  bottleNameInput.addEventListener("input", () => {
+    markDraftDirtyOpen();
+    scheduleAutoSaveOpen();
+  });
+
+  savePreBtn.addEventListener("click", async () => {
+    await savePreRank(false);
+  });
+
+  // ===== Reveal rendering =====
+  function renderReveal(revealObj) {
+    revealList.innerHTML = "";
+    const keys = Object.keys(revealObj || {}).sort();
+    keys.forEach(code => {
+      const item = revealObj[code] || {};
+      const row = document.createElement("div");
+      row.className = "rounded-xl border border-white/10 bg-black/20 p-4";
+      row.innerHTML = `
+        <div class="flex items-center justify-between">
+          <p class="text-white font-bold">Bottle ${code}</p>
+          <span class="text-[10px] uppercase tracking-widest text-primary font-bold">${item.preRank || ""}</span>
+        </div>
+        <p class="text-[#c9ad92] text-sm mt-2"><span class="text-white/80">Owner:</span> ${escapeHtml(item.ownerName || "Unknown")}</p>
+        <p class="text-[#c9ad92] text-sm mt-1"><span class="text-white/80">Bottle:</span> ${escapeHtml(item.bottleName || "—")}</p>
+      `;
+      revealList.appendChild(row);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  // ===== Main polling render =====
+  async function loadAndRender(force = false) {
+    try {
+      const active = await api("/api/active", { method: "GET" });
+      if (!active || !active.active) {
+        setStatus(null, "No live session");
+        showOnly(joinSection);
+        return;
+      }
+      currentSessionId = active.active;
+
+      // If token missing, show join
+      if (!myToken) {
+        setStatus(active.phase, "Live session available");
+        showOnly(joinSection);
+        return;
+      }
+
+      const data = await api(`/api/session?token=${encodeURIComponent(myToken)}`, { method: "GET" });
+
+      if (!data || !data.phase) {
+        setStatus(null, "No live session");
+        showOnly(joinSection);
+        return;
+      }
+
+      setStatus(data.phase, data.phase === "OPEN" ? "Session open" : (data.phase === "LOCKED" ? "Blind tasting" : "Reveal"));
+
+      if (!data.me) {
+        // Token doesn't exist in this active session -> rejoin
+        myToken = "";
+        localStorage.removeItem(TOKEN_KEY);
+        showOnly(joinSection);
+        return;
+      }
+
+      // ===== OPEN =====
+      if (data.phase === "OPEN") {
+        showOnly(myBottleSection);
+        meName.textContent = data.me.name || "—";
+
+        // Don’t overwrite mid-edit
+        if (!draftDirtyOpen) {
+          bottleNameInput.value = data.me.bottleName || "";
+          selectedPreRank = data.me.preRank || null;
+          setRankChipUI(selectedPreRank);
+          lastSavedOpen = { rank: selectedPreRank, bottle: (bottleNameInput.value || "").trim() };
+        }
+
+        return;
+      }
+
+      // ===== LOCKED =====
+      if (data.phase === "LOCKED") {
+        showOnly(blindSection);
+        const lineup = Array.isArray(data.lineup) ? data.lineup : [];
+        renderBottleList(lineup);
+        fillRankSelects(lineup);
+
+        // Restore draft selection after a refresh
+        const d = getVoteDraft();
+        if (d.special) rankSpecial.value = d.special;
+        if (d.mystery) rankMystery.value = d.mystery;
+        if (d.wild) rankWild.value = d.wild;
+        enforceUniqueRanks();
+
+        // If already submitted on this device, freeze controls
+        if (isVoteSubmitted()) {
+          rankSpecial.disabled = true;
+          rankMystery.disabled = true;
+          rankWild.disabled = true;
+          submitBtn.disabled = true;
+          submitBtn.classList.add("opacity-60", "cursor-not-allowed");
+        } else {
+          rankSpecial.disabled = false;
+          rankMystery.disabled = false;
+          rankWild.disabled = false;
+          submitBtn.disabled = false;
+          submitBtn.classList.remove("opacity-60", "cursor-not-allowed");
+        }
+
+        return;
+      }
+
+      // ===== REVEALED =====
+      if (data.phase === "REVEALED") {
+        showOnly(revealSection);
+        renderReveal(data.reveal || {});
+        return;
+      }
+
+      // Fallback
+      showOnly(joinSection);
+
+    } catch (e) {
+      setStatus(null, "Connection issue");
+      // don’t hard-fail UI; user can refresh
+      console.error(e);
+    }
+  }
+
+  // Poll every 4s, but OPEN drafts won’t be overwritten now.
+  setInterval(() => loadAndRender(false), 4000);
+
+  // Initial load
+  loadAndRender(true);
 </script>
 </body>
 </html>
