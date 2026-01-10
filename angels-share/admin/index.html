@@ -113,6 +113,43 @@
           </button>
         </div>
 
+        <div class="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+        <p class="text-white text-sm font-bold">Session Tools</p>
+        <p class="text-[#c9ad92] text-xs mt-1">Export to JSON, delete one, or purge all test clutter.</p>
+      
+        <div class="mt-3 flex gap-2">
+          <button id="loadSessionsBtn" class="flex-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-white px-3 py-2 text-xs font-bold flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">list</span> List
+          </button>
+          <button id="purgeBtn" class="flex-1 rounded-lg bg-red-500/20 hover:bg-red-500/25 border border-red-400/20 text-red-200 px-3 py-2 text-xs font-bold flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">delete_sweep</span> Purge
+          </button>
+        </div>
+      
+        <label class="block mt-4 text-primary text-xs font-bold uppercase tracking-wider">Past sessions</label>
+        <div class="relative mt-2">
+          <select id="sessionsSelect" class="w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary appearance-none">
+            <option value="">(Load list…)</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
+            <span class="material-symbols-outlined">expand_more</span>
+          </div>
+        </div>
+      
+        <div class="mt-3 flex gap-2">
+          <button id="exportBtn" class="flex-1 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-white px-3 py-2 text-xs font-bold flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">download</span> Export
+          </button>
+          <button id="deleteBtn" class="flex-1 rounded-lg bg-red-500/20 hover:bg-red-500/25 border border-red-400/20 text-red-200 px-3 py-2 text-xs font-bold flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">delete</span> Delete
+          </button>
+        </div>
+      
+        <p class="text-[#c9ad92] text-[11px] mt-3">
+          Purge deletes all session blobs (and clears the active session). Export downloads JSON for the selected session.
+        </p>
+      </div>
+
         <p id="adminOk" class="hidden mt-4 text-xs text-emerald-200 bg-emerald-950/25 border border-emerald-400/15 rounded-lg p-3"></p>
         <p id="adminErr" class="hidden mt-4 text-xs text-red-300 bg-red-950/30 border border-red-400/20 rounded-lg p-3"></p>
 
@@ -159,6 +196,12 @@
 
   const adminOk = $("adminOk");
   const adminErr = $("adminErr");
+
+  const loadSessionsBtn = $("loadSessionsBtn");
+  const sessionsSelect = $("sessionsSelect");
+  const exportBtn = $("exportBtn");
+  const deleteBtn = $("deleteBtn");
+  const purgeBtn = $("purgeBtn");
 
   let adminPin = sessionStorage.getItem(PIN_KEY) || "";
   let lastKnownPhase = null;
@@ -258,6 +301,83 @@
       showMsg(false, String(e.message || e));
     }
   }
+
+  async function loadSessionsList() {
+  showMsg(true, "");
+  try {
+    const data = await api("/api/admin/sessions", {
+      method: "GET",
+      headers: { "X-Admin-Pin": adminPin }
+    });
+
+    const sessions = (data.sessions || []);
+    sessionsSelect.innerHTML = `<option value="">(Select…)</option>` + sessions.map(id =>
+      `<option value="${id}">${id}</option>`
+    ).join("");
+
+    showMsg(true, `Loaded ${sessions.length} session(s).`);
+  } catch (e) {
+    showMsg(false, String(e.message || e));
+  }
+}
+
+loadSessionsBtn.addEventListener("click", loadSessionsList);
+
+exportBtn.addEventListener("click", () => {
+  const id = sessionsSelect.value;
+  if (!id) return showMsg(false, "Pick a session first.");
+  // Use a direct navigation so browser downloads it
+  const u = `${API}/api/admin/session/export?id=${encodeURIComponent(id)}`;
+  fetch(u, { headers: { "X-Admin-Pin": adminPin } })
+    .then(async (r) => {
+      if (!r.ok) throw new Error(await r.text());
+      const blob = await r.blob();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `angels-share-session-${id}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    })
+    .catch(e => showMsg(false, String(e.message || e)));
+});
+
+deleteBtn.addEventListener("click", async () => {
+  const id = sessionsSelect.value;
+  if (!id) return showMsg(false, "Pick a session first.");
+  if (!confirm(`Delete session ${id}?`)) return;
+
+  showMsg(true, "");
+  try {
+    await api("/api/admin/session/delete", {
+      method: "POST",
+      headers: { "X-Admin-Pin": adminPin },
+      body: JSON.stringify({ id })
+    });
+    showMsg(true, `Deleted session ${id}.`);
+    await loadSessionsList();
+    await refresh();
+  } catch (e) {
+    showMsg(false, String(e.message || e));
+  }
+});
+
+purgeBtn.addEventListener("click", async () => {
+  if (!confirm("Purge ALL sessions (and clear active)? This is irreversible.")) return;
+
+  showMsg(true, "");
+  try {
+    const out = await api("/api/admin/sessions/purge", {
+      method: "POST",
+      headers: { "X-Admin-Pin": adminPin }
+    });
+    showMsg(true, `Purged ${out.deletedCount} session(s).`);
+    sessionsSelect.innerHTML = `<option value="">(Load list…)</option>`;
+    await refresh();
+  } catch (e) {
+    showMsg(false, String(e.message || e));
+  }
+});
 
   function unlockUI() {
     pinErr.classList.add("hidden");
