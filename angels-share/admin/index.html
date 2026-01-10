@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>The Angel’s Share — Admin</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#ec7f13",
+            "background-light": "#f8f7f6",
+            "background-dark": "#221910",
+          },
+          fontFamily: { display: ["Space Grotesk", "sans-serif"] },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px",
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    .material-symbols-outlined{
+      font-variation-settings:'FILL' 0,'wght' 500,'GRAD' 0,'opsz' 24;
+    }
+    body{font-family:'Space Grotesk',sans-serif;}
+    body{min-height:max(884px,100dvh);}
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark min-h-screen">
+  <div class="relative flex h-full min-h-screen w-full flex-col bg-background-light dark:bg-background-dark max-w-[430px] mx-auto shadow-2xl overflow-x-hidden">
+
+    <div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10 border-b border-white/5">
+      <a href="/" class="text-primary flex size-12 shrink-0 items-center justify-start cursor-pointer" title="Back">
+        <span class="material-symbols-outlined">arrow_back_ios</span>
+      </a>
+
+      <div class="flex flex-col items-center">
+        <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center">Admin</h2>
+        <div class="flex items-center gap-1">
+          <div id="statusDot" class="size-2 rounded-full bg-gray-500"></div>
+          <span id="statusText" class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Not authenticated</span>
+        </div>
+      </div>
+
+      <div class="flex w-12 items-center justify-end">
+        <button id="clearPinBtn" class="flex items-center justify-center rounded-lg h-12 bg-transparent text-white p-0" title="Clear PIN">
+          <span class="material-symbols-outlined">key_off</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="px-4 pt-6">
+      <h3 class="text-white text-2xl font-bold tracking-tight">Session Controls</h3>
+      <p class="text-[#c9ad92] text-sm mt-1">Start, lock, reveal. Try not to lock your own house by accident.</p>
+    </div>
+
+    <!-- PIN card -->
+    <section class="px-4 pt-5" id="pinSection">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+        <label class="text-primary text-xs font-bold uppercase tracking-wider">Admin PIN</label>
+        <input id="pinInput" type="password" placeholder="Enter PIN"
+               class="mt-2 w-full bg-black/20 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:ring-primary focus:border-primary"/>
+        <button id="savePinBtn"
+                class="mt-4 w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+          Unlock
+          <span class="material-symbols-outlined">lock_open</span>
+        </button>
+        <p id="pinErr" class="hidden mt-3 text-xs text-red-300 bg-red-950/30 border border-red-400/20 rounded-lg p-3"></p>
+      </div>
+    </section>
+
+    <!-- Admin actions -->
+    <section class="px-4 pt-5 hidden" id="adminSection">
+      <div class="rounded-2xl border border-primary/20 bg-white/5 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-white font-bold">Active Session</p>
+            <p class="text-[#c9ad92] text-xs mt-1">ID: <span id="activeId">—</span></p>
+            <p class="text-[#c9ad92] text-xs mt-1">Phase: <span id="activePhase" class="text-white/90">—</span></p>
+          </div>
+          <button id="refreshBtn" class="rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-white px-3 py-2 text-xs font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">refresh</span> Refresh
+          </button>
+        </div>
+
+        <div class="mt-5 grid gap-3">
+          <button id="newSessionBtn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+            Start New Session
+            <span class="material-symbols-outlined">add_circle</span>
+          </button>
+
+          <button id="lockBtn" class="w-full bg-white/10 hover:bg-white/15 border border-white/10 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2">
+            Lock (Generate A/B/C…)
+            <span class="material-symbols-outlined">lock</span>
+          </button>
+
+          <button id="revealBtn" class="w-full bg-white/10 hover:bg-white/15 border border-white/10 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2">
+            Reveal
+            <span class="material-symbols-outlined">visibility</span>
+          </button>
+        </div>
+
+        <p id="adminOk" class="hidden mt-4 text-xs text-emerald-200 bg-emerald-950/25 border border-emerald-400/15 rounded-lg p-3"></p>
+        <p id="adminErr" class="hidden mt-4 text-xs text-red-300 bg-red-950/30 border border-red-400/20 rounded-lg p-3"></p>
+
+        <div class="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+          <p class="text-white text-sm font-bold">Host flow</p>
+          <ol class="mt-2 text-[#c9ad92] text-xs list-decimal list-inside space-y-1">
+            <li>Start session (everyone joins + pre-ranks).</li>
+            <li>Right before pours: Lock.</li>
+            <li>After tasting + votes: Reveal.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+<script>
+  const API = "";
+  const PIN_KEY = "angelsShare:adminPin";
+
+  const $ = (id) => document.getElementById(id);
+
+  const statusDot = $("statusDot");
+  const statusText = $("statusText");
+
+  const pinSection = $("pinSection");
+  const adminSection = $("adminSection");
+
+  const pinInput = $("pinInput");
+  const savePinBtn = $("savePinBtn");
+  const clearPinBtn = $("clearPinBtn");
+  const pinErr = $("pinErr");
+
+  const refreshBtn = $("refreshBtn");
+  const newSessionBtn = $("newSessionBtn");
+  const lockBtn = $("lockBtn");
+  const revealBtn = $("revealBtn");
+
+  const activeId = $("activeId");
+  const activePhase = $("activePhase");
+
+  const adminOk = $("adminOk");
+  const adminErr = $("adminErr");
+
+  let adminPin = sessionStorage.getItem(PIN_KEY) || "";
+
+  function setStatus(ok, msg) {
+    statusText.textContent = msg;
+    if (ok) {
+      statusDot.className = "size-2 rounded-full bg-primary animate-pulse";
+      statusText.className = "text-[10px] uppercase tracking-widest text-primary font-bold";
+    } else {
+      statusDot.className = "size-2 rounded-full bg-gray-500";
+      statusText.className = "text-[10px] uppercase tracking-widest text-gray-400 font-bold";
+    }
+  }
+
+  async function api(path, opts = {}) {
+    const res = await fetch(`${API}${path}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(opts.headers || {}),
+      },
+      ...opts,
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  }
+
+  function showMsg(ok, text) {
+    adminOk.classList.add("hidden");
+    adminErr.classList.add("hidden");
+    if (!text) return;
+    if (ok) {
+      adminOk.textContent = text;
+      adminOk.classList.remove("hidden");
+    } else {
+      adminErr.textContent = text;
+      adminErr.classList.remove("hidden");
+    }
+  }
+
+  async function refresh() {
+    showMsg(true, "");
+    try {
+      const active = await api("/api/active");
+      activeId.textContent = active.active || "—";
+      activePhase.textContent = active.phase || "—";
+    } catch (e) {
+      showMsg(false, String(e.message || e));
+    }
+  }
+
+  async function requirePin() {
+    if (!adminPin) {
+      pinSection.classList.remove("hidden");
+      adminSection.classList.add("hidden");
+      setStatus(false, "Not authenticated");
+      return false;
+    }
+    pinSection.classList.add("hidden");
+    adminSection.classList.remove("hidden");
+    setStatus(true, "Authenticated");
+    await refresh();
+    return true;
+  }
+
+  savePinBtn.addEventListener("click", async () => {
+    pinErr.classList.add("hidden");
+    const p = (pinInput.value || "").trim();
+    if (!p) {
+      pinErr.textContent = "PIN required.";
+      pinErr.classList.remove("hidden");
+      return;
+    }
+    // We don't validate PIN until you call an admin endpoint.
+    adminPin = p;
+    sessionStorage.setItem(PIN_KEY, adminPin);
+    await requirePin();
+  });
+
+  clearPinBtn.addEventListener("click", () => {
+    adminPin = "";
+    sessionStorage.removeItem(PIN_KEY);
+    pinInput.value = "";
+    requirePin();
+  });
+
+  refreshBtn.addEventListener("click", refresh);
+
+  newSessionBtn.addEventListener("click", async () => {
+    showMsg(true, "");
+    try {
+      const out = await api("/api/admin/session/new", {
+        method: "POST",
+        headers: { "x-admin-pin": adminPin }
+      });
+      showMsg(true, `New session started: ${out.sessionId}`);
+      await refresh();
+    } catch (e) {
+      showMsg(false, String(e.message || e));
+    }
+  });
+
+  lockBtn.addEventListener("click", async () => {
+    showMsg(true, "");
+    try {
+      const out = await api("/api/admin/session/lock", {
+        method: "POST",
+        headers: { "x-admin-pin": adminPin }
+      });
+      showMsg(true, `Locked. Lineup: ${ (out.lineup || []).join(", ") }`);
+      await refresh();
+    } catch (e) {
+      showMsg(false, String(e.message || e));
+    }
+  });
+
+  revealBtn.addEventListener("click", async () => {
+    showMsg(true, "");
+    try {
+      await api("/api/admin/session/reveal", {
+        method: "POST",
+        headers: { "x-admin-pin": adminPin }
+      });
+      showMsg(true, "Revealed. The damage is done.");
+      await refresh();
+    } catch (e) {
+      showMsg(false, String(e.message || e));
+    }
+  });
+
+  // boot
+  requirePin();
+</script>
+</body>
+</html>
