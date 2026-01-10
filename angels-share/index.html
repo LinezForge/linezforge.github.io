@@ -151,6 +151,9 @@
         <div class="flex items-start justify-between">
           <div>
             <p class="text-white font-bold">Blind tasting active</p>
+            <p id="myCodeText" class="text-[#c9ad92] text-xs mt-1 hidden">
+            Your bottle: <span class="text-white font-bold">—</span>
+            </p>
             <p class="text-[#c9ad92] text-xs mt-1">Tap a bottle to write notes. Rank after drinking. Reveal later.</p>
           </div>
           <div class="text-right">
@@ -310,6 +313,7 @@
 
   // ===== DOM =====
   const $ = (id) => document.getElementById(id);
+  const myCodeText = $("myCodeText");
 
   const titleText = $("titleText");
   const statusDot = $("statusDot");
@@ -822,36 +826,46 @@ saveNotesBtn.addEventListener("click", () => {
       }
 
       // ===== LOCKED =====
-      if (data.phase === "LOCKED") {
-        showOnly(blindSection);
-        const lineup = Array.isArray(data.lineup) ? data.lineup : [];
-        renderBottleList(lineup);
-        fillRankSelects(lineup);
-
-        // Restore draft selection after a refresh
-        const d = getVoteDraft();
-        if (d.special) rankSpecial.value = d.special;
-        if (d.mystery) rankMystery.value = d.mystery;
-        if (d.wild) rankWild.value = d.wild;
-        enforceUniqueRanks();
-
-        // If already submitted on this device, freeze controls
-        if (isVoteSubmitted()) {
-          rankSpecial.disabled = true;
-          rankMystery.disabled = true;
-          rankWild.disabled = true;
-          submitBtn.disabled = true;
-          submitBtn.classList.add("opacity-60", "cursor-not-allowed");
-        } else {
-          rankSpecial.disabled = false;
-          rankMystery.disabled = false;
-          rankWild.disabled = false;
-          submitBtn.disabled = false;
-          submitBtn.classList.remove("opacity-60", "cursor-not-allowed");
-        }
-
-        return;
+    if (data.phase === "LOCKED") {
+      showOnly(blindSection);
+    
+      // ✅ show "your bottle is X" (personal)
+      if (data.myCode) {
+        myCodeText.innerHTML = `Your bottle: <span class="text-white font-bold">Bottle ${data.myCode}</span>`;
+        myCodeText.classList.remove("hidden");
+      } else {
+        myCodeText.classList.add("hidden");
       }
+    
+      const lineup = Array.isArray(data.lineup) ? data.lineup : [];
+      renderBottleList(lineup);
+      fillRankSelects(lineup);
+    
+      // Restore draft selection after a refresh
+      const d = getVoteDraft();
+      if (d.special) rankSpecial.value = d.special;
+      if (d.mystery) rankMystery.value = d.mystery;
+      if (d.wild) rankWild.value = d.wild;
+      enforceUniqueRanks();
+    
+      // If already submitted on this device, freeze controls
+      if (isVoteSubmitted()) {
+        rankSpecial.disabled = true;
+        rankMystery.disabled = true;
+        rankWild.disabled = true;
+        submitBtn.disabled = true;
+        submitBtn.classList.add("opacity-60", "cursor-not-allowed");
+      } else {
+        rankSpecial.disabled = false;
+        rankMystery.disabled = false;
+        rankWild.disabled = false;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("opacity-60", "cursor-not-allowed");
+      }
+    
+      return;
+    }
+
 
       // ===== REVEALED =====
       if (data.phase === "REVEALED") {
